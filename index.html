@@ -333,8 +333,7 @@ body { min-height: 100dvh; display: flex; flex-direction: column; align-items: c
     <button class="retry-btn" onclick="retry()">もう一度診断する</button>
     <div class="footer-note">
       内向型リソース・チェッカー α版<br>
-      <a href="https://github.com/shex1009-byte/introvert-checker" target="_blank">GitHub</a>
-      · <a href="https://note.com/osakanasansan" target="_blank">note</a>
+      <a href="https://note.com/osakanasansan" target="_blank">note</a>
     </div>
   </div>
 </div>
@@ -404,7 +403,8 @@ const STATUS = [
     key:'NOMINAL', cls:'r-nominal',
     title:'今日はよく乗り越えています',
     body: (t,e,s) => `思考・感情・対人、すべての指標が正常範囲内です。このまま無理せず、自分のペースを守ってください。`,
-    noteTitle: null,
+    noteTitle: '内向型として、ゆるく生きるヒント',
+    noteSub:   '内向的な性格に合った"ゆるい生き方"をnoteで発信しています。よかったら覗いてみてください。',
   },
   {
     key:'THROTTLING', cls:'r-throttle',
@@ -548,15 +548,11 @@ function renderResult(){
     });
   });
 
-  // note CTA
+  // note CTA — 全ステータスで表示
   const cta=document.getElementById('note-cta');
-  if(si>=1 && st.noteTitle){
-    document.getElementById('note-title').textContent=st.noteTitle;
-    document.getElementById('note-sub').textContent  =st.noteSub;
-    cta.classList.add('visible');
-  } else {
-    cta.classList.remove('visible');
-  }
+  document.getElementById('note-title').textContent=st.noteTitle;
+  document.getElementById('note-sub').textContent  =st.noteSub;
+  cta.classList.add('visible');
 }
 
 /* ══════════════════════════════════
