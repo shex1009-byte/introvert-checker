@@ -4,257 +4,198 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>内向型リソース・チェッカー</title>
-<meta name="description" content="「なんとなく疲れた」を数値で共通言語化。内向型のためのエネルギー管理ツール。">
+<meta name="description" content="「なんとなく疲れた」が言語化できない。4問・約1分で今日の消耗度がわかります。">
 <meta property="og:title" content="内向型リソース・チェッカー">
-<meta property="og:description" content="「なんとなく疲れた」を数値で可視化。4問に答えるだけ。">
+<meta property="og:description" content="「なんとなく疲れた」が言語化できない。4問・約1分で今日の消耗度がわかります。">
+<meta property="og:url" content="https://shex1009-byte.github.io/introvert-checker/">
+<meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg:      #fafaf9;
-  --surface: #ffffff;
-  --border:  #e5e5e3;
-  --border2: #d0d0cc;
-  --text:    #1a1a18;
-  --text2:   #6b6b66;
-  --text3:   #a8a8a2;
-  --green:   #1a7a4a;
-  --green-bg:#edf7f2;
-  --amber:   #92580a;
-  --amber-bg:#fef3e2;
-  --red:     #b03030;
-  --red-bg:  #fdeaea;
-  --accent:  #1a1a18;
-  --mono: 'JetBrains Mono', monospace;
+  --bg:       #f7f7f5;
+  --surface:  #ffffff;
+  --border:   #e8e8e4;
+  --border2:  #d4d4ce;
+  --text:     #1a1a18;
+  --text2:    #6b6b66;
+  --text3:    #ababA4;
+  --green:    #1a7a4a;
+  --green-bg: #edf7f2;
+  --amber:    #8a5200;
+  --amber-bg: #fff4e0;
+  --red:      #a82828;
+  --red-bg:   #fdf0f0;
+  --note:     #41c9b4;
   --sans: 'Noto Sans JP', sans-serif;
-  --radius: 10px;
-  --radius-lg: 14px;
+  --mono: 'JetBrains Mono', monospace;
+  --r: 12px;
+  --r-lg: 16px;
 }
-
 html { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100dvh; }
+body { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; }
 
-body {
-  min-height: 100dvh;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 0 0 env(safe-area-inset-bottom, 24px);
-}
+/* ── SCREENS ── */
+.screen { display: none; flex-direction: column; width: 100%; max-width: 480px; min-height: 100dvh; padding: 0 24px; }
+.screen.active { display: flex; animation: si .22s ease; }
+@keyframes si { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:none} }
+.screen.back   { animation: sb .22s ease; }
+@keyframes sb  { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:none} }
 
-/* ── SCREEN SYSTEM ── */
-.screen {
-  display: none;
-  flex-direction: column;
-  width: 100%; max-width: 480px;
-  min-height: 100dvh;
-  padding: 0 20px;
-}
-.screen.active { display: flex; animation: slide-in .25s ease; }
-@keyframes slide-in { from { opacity:0; transform:translateX(18px); } to { opacity:1; transform:translateX(0); } }
-.screen.back { animation: slide-back .25s ease; }
-@keyframes slide-back { from { opacity:0; transform:translateX(-18px); } to { opacity:1; transform:translateX(0); } }
-
-/* ── PROGRESS BAR ── */
-.progress-wrap {
-  padding: 20px 0 0;
-  display: flex; align-items: center; gap: 12px;
-}
-.progress-bar {
-  flex: 1; height: 2px; background: var(--border); border-radius: 100px; overflow: hidden;
-}
-.progress-fill {
-  height: 100%; background: var(--accent); border-radius: 100px;
-  transition: width .4s cubic-bezier(.4,0,.2,1);
-}
-.progress-label {
-  font-family: var(--mono); font-size: 11px; color: var(--text3); white-space: nowrap; flex-shrink: 0;
-}
-
-/* ── BACK BUTTON ── */
+/* ── NAV ── */
+.nav { padding: 20px 0 0; display: flex; align-items: center; gap: 12px; min-height: 52px; }
 .back-btn {
-  background: none; border: none; cursor: pointer; color: var(--text3);
-  font-size: 13px; font-family: var(--sans);
-  display: flex; align-items: center; gap: 6px;
-  padding: 4px 0; margin-right: auto;
-  transition: color .15s;
+  background: none; border: none; cursor: pointer; color: var(--text3); font-size: 13px;
+  font-family: var(--sans); display: flex; align-items: center; gap: 5px; padding: 4px 0;
+  transition: color .15s; -webkit-tap-highlight-color: transparent; flex-shrink: 0;
 }
 .back-btn:hover { color: var(--text2); }
-.back-btn svg { flex-shrink: 0; }
+.prog-bar { flex: 1; height: 2px; background: var(--border); border-radius: 100px; overflow: hidden; }
+.prog-fill { height: 100%; background: var(--text); border-radius: 100px; transition: width .35s cubic-bezier(.4,0,.2,1); }
+.prog-label { font-family: var(--mono); font-size: 11px; color: var(--text3); white-space: nowrap; flex-shrink: 0; }
 
-/* ── QUESTION SCREEN ── */
-.q-body {
-  flex: 1; display: flex; flex-direction: column;
-  padding-top: 40px; padding-bottom: 32px;
-}
-.q-eyebrow {
-  font-family: var(--mono); font-size: 11px; color: var(--text3);
-  letter-spacing: .08em; margin-bottom: 16px;
-}
-.q-text {
-  font-size: clamp(18px, 5vw, 22px); font-weight: 700; line-height: 1.45;
-  color: var(--text); margin-bottom: 8px;
-}
-.q-hint {
-  font-size: 13px; color: var(--text2); margin-bottom: 32px; line-height: 1.6;
-}
-
-/* OPTIONS */
-.options { display: flex; flex-direction: column; gap: 10px; }
-.opt {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 16px 18px; border: 1px solid var(--border); border-radius: var(--radius-lg);
-  cursor: pointer; background: var(--surface); user-select: none;
-  transition: border-color .15s, background .15s, transform .1s;
+/* ── BUTTONS ── */
+.btn-primary {
+  width: 100%; padding: 16px; background: var(--text); color: #fff; border: none;
+  border-radius: var(--r-lg); font-family: var(--sans); font-size: 15px; font-weight: 500;
+  cursor: pointer; transition: opacity .15s, transform .1s;
   -webkit-tap-highlight-color: transparent;
 }
-.opt:active { transform: scale(0.98); }
-.opt.selected {
-  border-color: var(--accent); border-width: 1.5px;
-  background: var(--bg);
-}
-.opt-left { display: flex; flex-direction: column; gap: 3px; }
-.opt-text { font-size: 15px; font-weight: 500; color: var(--text); line-height: 1.4; }
-.opt-sub  { font-size: 12px; color: var(--text3); }
-.opt-radio {
-  width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border2);
-  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  transition: border-color .15s, background .15s; margin-left: 16px;
-}
-.opt.selected .opt-radio { border-color: var(--accent); background: var(--accent); }
-.opt-dot { display: none; width: 6px; height: 6px; border-radius: 50%; background: white; }
-.opt.selected .opt-dot { display: block; }
-
-/* NEXT BUTTON */
-.next-btn {
-  margin-top: auto; padding: 16px;
-  background: var(--accent); color: #fff;
-  border: none; border-radius: var(--radius-lg); font-family: var(--sans);
-  font-size: 15px; font-weight: 500; cursor: pointer; width: 100%;
-  transition: opacity .15s, transform .1s;
-  -webkit-tap-highlight-color: transparent;
-}
-.next-btn:disabled { opacity: 0.3; cursor: default; }
-.next-btn:not(:disabled):active { transform: scale(0.98); }
+.btn-primary:disabled { opacity: .3; cursor: default; }
+.btn-primary:not(:disabled):active { transform: scale(.98); opacity: .9; }
 
 /* ── START SCREEN ── */
-.start-body {
-  flex: 1; display: flex; flex-direction: column; justify-content: center;
-  padding-top: 60px; padding-bottom: 40px;
+.start-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px 0 48px; }
+.start-tag {
+  font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: .08em; margin-bottom: 28px;
 }
-.start-badge {
-  font-family: var(--mono); font-size: 11px; color: var(--text3);
-  letter-spacing: .1em; margin-bottom: 24px;
+.start-title { font-size: clamp(28px,7vw,38px); font-weight: 700; line-height: 1.25; letter-spacing: -.02em; margin-bottom: 20px; }
+.start-title em { font-style: normal; border-bottom: 2.5px solid var(--text); padding-bottom: 1px; }
+.start-desc { font-size: 14px; color: var(--text2); line-height: 1.85; margin-bottom: 12px; }
+
+/* time badge */
+.time-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 100px;
+  padding: 6px 14px; font-size: 13px; font-weight: 500; color: var(--text2);
+  margin-bottom: 36px;
 }
-.start-title {
-  font-size: clamp(26px, 7vw, 36px); font-weight: 700; line-height: 1.25;
-  letter-spacing: -.02em; margin-bottom: 16px;
-}
-.start-title em { font-style: normal; border-bottom: 2px solid var(--text); }
-.start-desc {
-  font-size: 14px; color: var(--text2); line-height: 1.8; margin-bottom: 48px;
-}
-.start-btn {
-  padding: 16px; background: var(--accent); color: #fff;
-  border: none; border-radius: var(--radius-lg); font-family: var(--sans);
-  font-size: 15px; font-weight: 500; cursor: pointer; width: 100%;
-  transition: opacity .15s;
-  -webkit-tap-highlight-color: transparent;
-}
-.start-steps {
-  margin-top: 32px; display: flex; flex-direction: column; gap: 10px;
-}
+.time-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+
+.start-btn-wrap { margin-bottom: 32px; }
+.start-steps { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
 .step-row {
-  display: flex; align-items: center; gap: 12px;
-  font-size: 13px; color: var(--text2);
+  display: flex; align-items: center; gap: 14px; padding: 14px 18px;
+  border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2);
 }
+.step-row:last-child { border-bottom: none; }
 .step-num {
   font-family: var(--mono); font-size: 11px; font-weight: 600;
   width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border2);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-  color: var(--text3);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--text3);
 }
+
+/* ── QUESTION SCREEN ── */
+.q-body { flex: 1; display: flex; flex-direction: column; padding: 36px 0 32px; transition: opacity .18s, transform .18s; }
+.q-context {
+  font-size: 12px; color: var(--text3); background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 13px; margin-bottom: 20px; line-height: 1.7;
+}
+.q-context strong { color: var(--text2); font-weight: 500; }
+.q-step { font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: .08em; margin-bottom: 12px; }
+.q-text { font-size: clamp(18px,5vw,22px); font-weight: 700; line-height: 1.45; margin-bottom: 6px; }
+.q-hint { font-size: 12px; color: var(--text3); margin-bottom: 28px; line-height: 1.6; }
+.options { display: flex; flex-direction: column; gap: 8px; }
+.opt {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 15px 18px; border: 1px solid var(--border); border-radius: var(--r-lg);
+  cursor: pointer; background: var(--surface); user-select: none;
+  transition: border-color .12s, background .12s; -webkit-tap-highlight-color: transparent;
+}
+.opt:active { transform: scale(.98); }
+.opt.selected { border-color: var(--text); border-width: 1.5px; background: var(--bg); }
+.opt-left { display: flex; flex-direction: column; gap: 3px; }
+.opt-text { font-size: 15px; font-weight: 500; color: var(--text); }
+.opt-sub  { font-size: 12px; color: var(--text3); }
+.opt-radio {
+  width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border2); flex-shrink: 0; margin-left: 16px;
+  display: flex; align-items: center; justify-content: center; transition: border-color .12s, background .12s;
+}
+.opt.selected .opt-radio { background: var(--text); border-color: var(--text); }
+.opt-dot { display: none; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+.opt.selected .opt-dot { display: block; }
+.q-spacer { flex: 1; min-height: 24px; }
 
 /* ── RESULT SCREEN ── */
-.result-body {
-  flex: 1; display: flex; flex-direction: column;
-  padding-top: 32px; padding-bottom: 40px; gap: 16px;
+.result-body { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 28px 0 48px; }
+
+/* status hero */
+.status-hero {
+  padding: 24px; border-radius: var(--r-lg); border: 1px solid var(--border); background: var(--surface);
 }
-.result-status {
-  padding: 24px; border-radius: var(--radius-lg); border: 1px solid var(--border);
-  background: var(--surface);
-}
-.result-badge {
+.status-badge {
   font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .08em;
-  display: inline-block; padding: 3px 10px; border-radius: 100px; margin-bottom: 12px;
+  display: inline-block; padding: 4px 12px; border-radius: 100px; margin-bottom: 14px;
 }
-.r-nominal  .result-badge { background: var(--green-bg); color: var(--green); }
-.r-throttle .result-badge { background: var(--amber-bg); color: var(--amber); }
-.r-down     .result-badge { background: var(--red-bg);   color: var(--red); }
-
-.result-title {
-  font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 6px; line-height: 1.4;
+.r-nominal  .status-badge { background: var(--green-bg); color: var(--green); }
+.r-throttle .status-badge { background: var(--amber-bg); color: var(--amber); }
+.r-down     .status-badge { background: var(--red-bg);   color: var(--red);   }
+.status-title { font-size: 20px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; }
+.status-body  { font-size: 14px; color: var(--text2); line-height: 1.85; }
+/* inline note link inside status body */
+.status-body .note-inline {
+  color: var(--text); font-weight: 500; text-decoration: none;
+  border-bottom: 1px solid var(--text2); transition: border-color .15s;
 }
-.result-sub { font-size: 13px; color: var(--text2); line-height: 1.7; }
+.status-body .note-inline:hover { border-color: var(--text); }
 
-/* METERS */
-.meters { display: flex; flex-direction: column; gap: 14px; }
-.meter-row { display: flex; flex-direction: column; gap: 6px; }
+/* meters */
+.meters-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; }
+.meters-title { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: .08em; margin-bottom: 16px; }
+.meters { display: flex; flex-direction: column; gap: 16px; }
+.meter-row { display: flex; flex-direction: column; gap: 7px; }
 .meter-top { display: flex; justify-content: space-between; align-items: baseline; }
-.meter-key { font-size: 12px; color: var(--text2); }
-.meter-val {
-  font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--text);
-}
-.meter-track {
-  height: 4px; background: var(--border); border-radius: 100px; overflow: hidden;
-}
-.meter-fill {
-  height: 100%; border-radius: 100px;
-  transition: width .6s cubic-bezier(.4,0,.2,1);
-}
+.meter-key { font-size: 13px; color: var(--text2); }
+.meter-val { font-family: var(--mono); font-size: 13px; font-weight: 600; }
+.meter-track { height: 4px; background: var(--border); border-radius: 100px; overflow: hidden; }
+.meter-fill  { height: 100%; border-radius: 100px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+.meter-comment { font-size: 11px; color: var(--text3); }
 
-/* LOG */
-.result-log {
-  background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius);
-  padding: 12px 14px; margin-top: 4px;
-  font-size: 12px; color: var(--text2); line-height: 1.7;
-}
-
-/* NOTE CTA */
+/* note CTA — integrated, not banner */
 .note-cta {
-  display: none;
-  align-items: center; justify-content: space-between; gap: 12px;
-  padding: 18px; border-radius: var(--radius-lg); border: 1px solid var(--border);
-  background: var(--surface); text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: border-color .15s;
+  display: none; align-items: flex-start; gap: 14px;
+  padding: 18px 20px; border-radius: var(--r-lg);
+  border: 1px solid rgba(65,201,180,.3); background: rgba(65,201,180,.05);
+  text-decoration: none; -webkit-tap-highlight-color: transparent;
+  transition: border-color .15s, background .15s;
 }
 .note-cta.visible { display: flex; animation: fadein .3s ease; }
 @keyframes fadein { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-.note-cta:active { opacity: 0.8; }
-.note-badge-sm {
-  font-family: var(--mono); font-size: 10px; font-weight: 600;
-  background: #41c9b4; color: #fff; padding: 2px 7px; border-radius: 4px;
-  display: inline-block; margin-bottom: 6px;
+.note-cta:active { opacity: .8; }
+.note-cta-icon {
+  width: 36px; height: 36px; border-radius: 8px; background: var(--note);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
 }
-.note-cta-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; }
-.note-cta-title em { font-style: normal; color: #1a8a7a; }
-.note-cta-sub { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.6; }
-.note-arrow { font-size: 16px; color: var(--text3); flex-shrink: 0; }
+.note-cta-icon span { font-family: var(--mono); font-size: 11px; font-weight: 700; color: #fff; }
+.note-cta-body {}
+.note-cta-label { font-family: var(--mono); font-size: 10px; color: var(--note); letter-spacing: .06em; margin-bottom: 4px; font-weight: 600; }
+.note-cta-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 4px; }
+.note-cta-sub   { font-size: 12px; color: var(--text2); line-height: 1.6; }
 
-/* SHARE BUTTONS */
-.share-col { display: flex; flex-direction: column; gap: 10px; }
+/* share */
+.share-col { display: flex; flex-direction: column; gap: 8px; }
 .share-btn {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 15px; border-radius: var(--radius-lg); border: 1px solid var(--border);
+  padding: 15px; border-radius: var(--r-lg); border: 1px solid var(--border);
   background: var(--surface); color: var(--text); font-family: var(--sans);
   font-size: 14px; font-weight: 500; cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-  transition: border-color .15s;
+  -webkit-tap-highlight-color: transparent; transition: opacity .15s;
 }
-.share-btn:active { opacity: 0.7; }
-.share-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.share-btn:active { opacity: .7; }
+.share-btn.primary { background: var(--text); color: #fff; border-color: var(--text); }
 .x-label { font-family: var(--mono); font-weight: 700; font-size: 14px; }
 
 .retry-btn {
@@ -262,141 +203,138 @@ body {
   font-size: 13px; cursor: pointer; text-align: center; padding: 8px; width: 100%;
   -webkit-tap-highlight-color: transparent;
 }
-.retry-btn:active { opacity: 0.6; }
-
-.footer-note {
-  font-size: 11px; color: var(--text3); text-align: center; line-height: 1.8; margin-top: 8px;
-}
-.footer-note a { color: var(--text3); text-decoration: underline; }
+.footer-note { font-size: 11px; color: var(--text3); text-align: center; line-height: 1.9; margin-top: 4px; }
+.footer-note a { color: var(--text3); }
 
 #share-canvas { display: none; }
 </style>
 </head>
 <body>
 
-<!-- ────────────────────────────────
-     START SCREEN
-──────────────────────────────── -->
+<!-- ══════════════════════════
+     START
+══════════════════════════ -->
 <div class="screen active" id="screen-start">
   <div class="start-body">
-    <div class="start-badge">INTROVERT RESOURCE CHECKER · α</div>
-    <h1 class="start-title">今日の<em>エネルギー</em>、<br>数値で見てみよう。</h1>
+    <div class="start-tag">INTROVERT RESOURCE CHECKER · α</div>
+    <h1 class="start-title">今日の<em>消耗</em>、<br>ちゃんと言葉にしよう。</h1>
     <p class="start-desc">
-      「なんとなく疲れた」が言語化できない。<br>
-      4問答えるだけで、今日の消耗度がわかります。
+      「なんとなく疲れた」は感覚じゃなくて、ちゃんと理由がある。<br>
+      4問に答えるだけで、今日のエネルギー消費を数値で確認できます。
     </p>
-    <button class="start-btn" onclick="goTo('screen-q', 1)">診断をはじめる</button>
+    <div class="time-badge">
+      <span class="time-badge-dot"></span>
+      所要時間：約1分
+    </div>
+    <div class="start-btn-wrap">
+      <button class="btn-primary" onclick="goTo('screen-q',1)">診断をはじめる</button>
+    </div>
     <div class="start-steps">
       <div class="step-row"><span class="step-num">1</span>起床時のコンディション</div>
       <div class="step-row"><span class="step-num">2</span>午前中の過ごし方</div>
       <div class="step-row"><span class="step-num">3</span>午後の過ごし方</div>
-      <div class="step-row"><span class="step-num">4</span>今日のいちばんしんどかった場面</div>
+      <div class="step-row"><span class="step-num">4</span>今日いちばんしんどかった場面</div>
     </div>
   </div>
 </div>
 
-<!-- ────────────────────────────────
-     QUESTION SCREENS (Q1–Q4)
-──────────────────────────────── -->
+<!-- ══════════════════════════
+     QUESTION
+══════════════════════════ -->
 <div class="screen" id="screen-q">
-  <div class="progress-wrap">
+  <div class="nav">
     <button class="back-btn" id="back-btn" onclick="goBack()">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       戻る
     </button>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-    <div class="progress-label" id="progress-label">1 / 4</div>
+    <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-label" id="prog-label">1 / 4</div>
   </div>
-
-  <div class="q-body">
-    <div class="q-eyebrow" id="q-eyebrow">STEP 1</div>
+  <div class="q-body" id="q-body">
+    <div class="q-context" id="q-context"></div>
+    <div class="q-step" id="q-step">STEP 1</div>
     <div class="q-text" id="q-text"></div>
     <div class="q-hint" id="q-hint"></div>
     <div class="options" id="options"></div>
-    <div style="height: 28px;"></div>
-    <button class="next-btn" id="next-btn" disabled onclick="nextQuestion()">次へ</button>
+    <div class="q-spacer"></div>
+    <button class="btn-primary" id="next-btn" disabled onclick="nextQ()">次へ</button>
   </div>
 </div>
 
-<!-- ────────────────────────────────
-     RESULT SCREEN
-──────────────────────────────── -->
+<!-- ══════════════════════════
+     RESULT
+══════════════════════════ -->
 <div class="screen" id="screen-result">
-  <div style="padding: 20px 0 0; display: flex; align-items: center; justify-content: space-between;">
-    <button class="back-btn" onclick="goTo('screen-q', 4, true)">
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-        <path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+  <div class="nav">
+    <button class="back-btn" onclick="goTo('screen-q',4,true)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       戻る
     </button>
-    <span style="font-family:var(--mono);font-size:11px;color:var(--text3);">診断結果</span>
+    <span style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-left:auto;">診断結果</span>
   </div>
 
   <div class="result-body">
 
-    <!-- ステータスカード -->
-    <div class="result-status" id="result-status">
-      <div class="result-badge" id="result-badge">NOMINAL</div>
-      <div class="result-title" id="result-title">正常稼働</div>
-      <div class="result-sub" id="result-sub"></div>
-      <div class="result-log" id="result-log"></div>
+    <div class="status-hero" id="status-hero">
+      <div class="status-badge" id="r-badge">NOMINAL</div>
+      <div class="status-title" id="r-title"></div>
+      <div class="status-body"  id="r-body"></div>
     </div>
 
-    <!-- メーター -->
-    <div class="meters">
-      <div class="meter-row">
-        <div class="meter-top">
-          <span class="meter-key">思考エネルギー消費</span>
-          <span class="meter-val" id="think-val">0%</span>
+    <div class="meters-card">
+      <div class="meters-title">ENERGY LOG</div>
+      <div class="meters">
+        <div class="meter-row">
+          <div class="meter-top">
+            <span class="meter-key">思考エネルギー消費</span>
+            <span class="meter-val" id="think-val" style="color:var(--text3)">—</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="think-fill"></div></div>
+          <div class="meter-comment" id="think-comment"></div>
         </div>
-        <div class="meter-track"><div class="meter-fill" id="think-fill"></div></div>
-      </div>
-      <div class="meter-row">
-        <div class="meter-top">
-          <span class="meter-key">感情バッファ消費</span>
-          <span class="meter-val" id="emo-val">0%</span>
+        <div class="meter-row">
+          <div class="meter-top">
+            <span class="meter-key">感情バッファ消費</span>
+            <span class="meter-val" id="emo-val" style="color:var(--text3)">—</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="emo-fill"></div></div>
+          <div class="meter-comment" id="emo-comment"></div>
         </div>
-        <div class="meter-track"><div class="meter-fill" id="emo-fill"></div></div>
-      </div>
-      <div class="meter-row">
-        <div class="meter-top">
-          <span class="meter-key">対人負荷</span>
-          <span class="meter-val" id="sio-val">0%</span>
+        <div class="meter-row">
+          <div class="meter-top">
+            <span class="meter-key">対人負荷</span>
+            <span class="meter-val" id="sio-val" style="color:var(--text3)">—</span>
+          </div>
+          <div class="meter-track"><div class="meter-fill" id="sio-fill"></div></div>
+          <div class="meter-comment" id="sio-comment"></div>
         </div>
-        <div class="meter-track"><div class="meter-fill" id="sio-fill"></div></div>
       </div>
     </div>
 
-    <!-- note CTA -->
     <a class="note-cta" id="note-cta" href="https://note.com/osakanasansan" target="_blank" rel="noopener">
-      <div>
-        <span class="note-badge-sm">note</span>
-        <div class="note-cta-title" id="note-cta-title"></div>
-        <div class="note-cta-sub" id="note-cta-sub"></div>
+      <div class="note-cta-icon"><span>note</span></div>
+      <div class="note-cta-body">
+        <div class="note-cta-label">おさかなのnote</div>
+        <div class="note-cta-title" id="note-title"></div>
+        <div class="note-cta-sub"   id="note-sub"></div>
       </div>
-      <div class="note-arrow">→</div>
     </a>
 
-    <!-- シェア -->
     <div class="share-col">
       <button class="share-btn primary" onclick="generateAndShare()">
         <span class="x-label">𝕏</span> 診断結果をシェア
       </button>
       <button class="share-btn" onclick="saveImage()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         画像を保存
       </button>
     </div>
 
     <button class="retry-btn" onclick="retry()">もう一度診断する</button>
-
     <div class="footer-note">
       内向型リソース・チェッカー α版<br>
-      <a href="https://note.com/osakanasansan" target="_blank">note</a> · フィードバックはXへ
+      <a href="https://github.com/shex1009-byte/introvert-checker" target="_blank">GitHub</a>
+      · <a href="https://note.com/osakanasansan" target="_blank">note</a>
     </div>
   </div>
 </div>
@@ -404,435 +342,354 @@ body {
 <canvas id="share-canvas" width="1200" height="630"></canvas>
 
 <script>
-/* ═══════════════════════════════════
+/* ══════════════════════════════════
    QUESTIONS
-═══════════════════════════════════ */
-const QUESTIONS = [
+══════════════════════════════════ */
+const QS = [
   {
-    eyebrow: 'STEP 1 — 今日の出発点',
-    text: '起きたとき、どんな感じだった？',
-    hint: '今日のエネルギーの初期値を教えてください。',
+    step:    'STEP 1 — 今日の出発点',
+    context: '内向型の消耗は、その日の<strong>初期エネルギー量</strong>に大きく左右されます。',
+    text:    '起きたとき、どんな感じでしたか？',
+    hint:    '正直に選んでください。',
     choices: [
-      { text: 'よく眠れた',           sub: '充電完了',        think:  0, emo:  0, social:  0 },
-      { text: 'まあまあ眠れた',        sub: '7〜8割充電',      think:  6, emo:  6, social:  3 },
-      { text: 'あまり眠れなかった',    sub: '4〜5割充電',      think: 16, emo: 18, social:  8 },
-      { text: 'ほとんど眠れなかった',  sub: '充電切れ気味',    think: 24, emo: 28, social: 12 },
+      { text:'よく眠れた',          sub:'充電ほぼ完了',      think: 0,  emo: 0,  social: 0  },
+      { text:'まあまあ眠れた',       sub:'7〜8割充電',        think: 6,  emo: 6,  social: 3  },
+      { text:'あまり眠れなかった',   sub:'4〜5割充電',        think:16,  emo:18,  social: 8  },
+      { text:'ほとんど眠れなかった', sub:'充電切れ気味',      think:24,  emo:28,  social:12  },
     ]
   },
   {
-    eyebrow: 'STEP 2 — 午前中の消費',
-    text: '午前中はどう過ごした？',
-    hint: '複数あった場合は、いちばん負荷が高かったものを選んでください。',
+    step:    'STEP 2 — 午前中の消費',
+    context: '内向型は<strong>対人場面</strong>で外向型の数倍エネルギーを使います。午前中の過ごし方を教えてください。',
+    text:    '午前中はどう過ごしましたか？',
+    hint:    '複数あった場合は、いちばん負荷が高かったものを選んでください。',
     choices: [
-      { text: 'ひとりで作業・在宅',     sub: '対人なし',              think: 12, emo:  5, social:  2 },
-      { text: 'オンライン会議・打合せ', sub: '画面越しの消耗',         think: 14, emo: 12, social: 16 },
-      { text: '対面ミーティング・外出', sub: '気を遣う時間',           think: 16, emo: 16, social: 24 },
-      { text: '休んでいた',             sub: '回復モード',             think:  0, emo:  0, social:  0 },
+      { text:'ひとりで作業・在宅',      sub:'対人なし',              think:12, emo: 5, social: 2  },
+      { text:'オンライン会議・打合せ',  sub:'画面越しの消耗',         think:14, emo:12, social:16  },
+      { text:'対面ミーティング・外出',  sub:'気を遣う場面が多い',     think:16, emo:16, social:24  },
+      { text:'休んでいた',              sub:'回復モード',             think: 0, emo: 0, social: 0  },
     ]
   },
   {
-    eyebrow: 'STEP 3 — 午後の消費',
-    text: '午後はどう過ごした？\n（または、これから過ごす予定は？）',
-    hint: '複数あった場合は、いちばん負荷が高かったものを選んでください。',
+    step:    'STEP 3 — 午後の消費',
+    context: '午後になると<strong>感情バッファ</strong>が減り、ちょっとしたことでも疲れを感じやすくなります。',
+    text:    '午後はどう過ごしましたか？\nまたはこれから過ごす予定は？',
+    hint:    '複数あった場合は、いちばん負荷が高かったものを選んでください。',
     choices: [
-      { text: 'ひとりで作業・在宅',     sub: '集中できる時間',         think: 14, emo:  5, social:  2 },
-      { text: '打合せ・商談・会議',     sub: '人と話す時間',           think: 14, emo: 14, social: 20 },
-      { text: '外出・移動・人混み',     sub: '刺激が多い環境',         think:  8, emo: 16, social: 12 },
-      { text: '休む予定 / まだわからない', sub: '',                   think:  0, emo:  0, social:  0 },
+      { text:'ひとりで作業・在宅',        sub:'集中できる時間',          think:14, emo: 5, social: 2 },
+      { text:'打合せ・商談・会議',        sub:'人と話す時間',            think:14, emo:14, social:20 },
+      { text:'外出・移動・人混み',        sub:'刺激が多い環境',          think: 8, emo:16, social:12 },
+      { text:'休む予定 / まだわからない', sub:'',                        think: 0, emo: 0, social: 0 },
     ]
   },
   {
-    eyebrow: 'STEP 4 — 対人ピーク',
-    text: '今日、いちばんしんどかった場面は？',
-    hint: '正直に選んでください。「とくになし」も立派な回答です。',
+    step:    'STEP 4 — 対人ピーク',
+    context: '1日の中の<strong>ピーク負荷</strong>が、消耗感の大部分を決めます。',
+    text:    '今日いちばんしんどかった場面は？',
+    hint:    '「とくになし」も立派な回答です。',
     choices: [
-      { text: 'とくになかった',             sub: '穏やかな1日',          think:  0, emo:  0, social:  0 },
-      { text: '急な連絡・予定外の対応',     sub: '心の準備ができなかった', think:  8, emo: 12, social:  8 },
-      { text: '気を遣う食事・雑談の場',     sub: '逃げ場がなかった',      think:  5, emo: 14, social: 18 },
-      { text: '長時間の議論・意思決定',     sub: '感情も思考も削られた',   think: 18, emo: 22, social: 14 },
+      { text:'とくになかった',              sub:'穏やかな1日',              think: 0, emo: 0,  social: 0  },
+      { text:'急な連絡・予定外の対応',      sub:'心の準備ができなかった',    think: 8, emo:12,  social: 8  },
+      { text:'気を遣う食事・雑談の場',      sub:'逃げ場がなかった',          think: 5, emo:14,  social:18  },
+      { text:'長時間の議論・意思決定',      sub:'感情も思考も削られた',       think:18, emo:22,  social:14  },
     ]
   },
 ];
 
+/* ══════════════════════════════════
+   STATUS DEFINITIONS
+══════════════════════════════════ */
 const STATUS = [
   {
-    key: 'NOMINAL', cls: 'r-nominal',
-    title: '正常稼働',
-    sub: 'エネルギー残量は十分です。今日はよく乗り越えています。無理せずこのペースで。',
-    logs: [
-      'すべての指標が正常範囲内。自分のペースを保てています。',
-      '充電残量あり。今日はよく乗り越えています。',
-    ],
+    key:'NOMINAL', cls:'r-nominal',
+    title:'今日はよく乗り越えています',
+    body: (t,e,s) => `思考・感情・対人、すべての指標が正常範囲内です。このまま無理せず、自分のペースを守ってください。`,
     noteTitle: null,
   },
   {
-    key: 'THROTTLING', cls: 'r-throttle',
-    title: '省エネモード',
-    sub: '消費が多めです。次の予定の前に、少しひとりになれる時間を確保してください。',
-    logs: [
-      '思考・感情の処理が重くなっています。短い休憩が有効です。',
-      '対人タスクが続いています。意識的にペースダウンを。',
-    ],
-    noteTitle: 'なぜ内向型はこんなに<em>消耗しやすい</em>のか',
-    noteSub: '疲れやすさの仕組みと、ゆるく楽になるヒントを書いています →',
+    key:'THROTTLING', cls:'r-throttle',
+    title:'省エネモードに入っています',
+    body: (t,e,s) => {
+      const high = e > t && e > s ? '感情バッファ' : t > s ? '思考エネルギー' : '対人負荷';
+      return `特に<strong>${high}</strong>の消費が多い状態です。次の予定の前に、少しひとりになれる時間を確保してください。なぜ内向型はこうなりやすいのか、<a class="note-inline" href="https://note.com/osakanasansan" target="_blank">noteで詳しく書いています →</a>`;
+    },
+    noteTitle: '頑張らなくていい理由、書きました',
+    noteSub:   '消耗しやすさの仕組みと、ゆるく楽になるヒントをnoteにまとめています。',
   },
   {
-    key: 'OVERLOADED', cls: 'r-down',
-    title: 'オーバーロード',
-    sub: 'エネルギーが限界に近づいています。今すぐひとりになれる場所と時間が必要です。',
-    logs: [
-      'これ以上の対人タスクは処理できません。充電を優先してください。',
-      '頑張りすぎています。今日はもう無理しないでください。',
-    ],
-    noteTitle: '内向型が<em>限界を超えないため</em>にしていること',
-    noteSub: '頑張りすぎを手放して、ゆるく生きるヒントを書いています →',
+    key:'OVERLOADED', cls:'r-down',
+    title:'限界に近づいています',
+    body: (t,e,s) => `エネルギーがほぼ底をついています。これ以上無理をすると、翌日以降に響きます。今日はもうひとりになれる場所と時間を優先してください。同じように限界まで頑張ってしまう方へ、<a class="note-inline" href="https://note.com/osakanasansan" target="_blank">noteで書いていることがあります →</a>`,
+    noteTitle: '「頑張りすぎる自分」を卒業した話',
+    noteSub:   '適応障害で休職した経験から、消耗しないための考え方をnoteに書いています。',
   },
 ];
 
-/* ═══════════════════════════════════
+/* ══════════════════════════════════
    STATE
-═══════════════════════════════════ */
+══════════════════════════════════ */
 const answers = [null, null, null, null];
 let currentQ = 0;
-let backDir = false;
 
-/* ═══════════════════════════════════
+/* ══════════════════════════════════
    NAVIGATION
-═══════════════════════════════════ */
-function goTo(screenId, qIndex, isBack) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'back'));
-  const target = document.getElementById(screenId);
-  if (isBack) target.classList.add('back');
-  target.classList.add('active');
-  if (screenId === 'screen-q') {
-    currentQ = (qIndex || 1) - 1;
-    renderQuestion();
-  }
-  if (screenId === 'screen-result') renderResult();
-  window.scrollTo(0, 0);
+══════════════════════════════════ */
+function goTo(id, qIdx, isBack) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active','back'));
+  const el = document.getElementById(id);
+  if (isBack) el.classList.add('back');
+  el.classList.add('active');
+  if (id === 'screen-q')      { currentQ = (qIdx||1)-1; renderQ(); }
+  if (id === 'screen-result') renderResult();
+  window.scrollTo(0,0);
 }
-
 function goBack() {
   if (currentQ === 0) goTo('screen-start', null, true);
-  else { currentQ--; renderQuestion(true); }
-  window.scrollTo(0, 0);
+  else { currentQ--; renderQ(true); }
+  window.scrollTo(0,0);
 }
-
-function nextQuestion() {
+function nextQ() {
   if (answers[currentQ] === null) return;
-  if (currentQ < 3) { currentQ++; renderQuestion(); }
+  if (currentQ < 3) { currentQ++; renderQ(); }
   else goTo('screen-result');
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
 }
+function retry() { answers.fill(null); goTo('screen-start',null,true); }
 
-function retry() {
-  answers.fill(null);
-  goTo('screen-start', null, true);
-}
-
-/* ═══════════════════════════════════
+/* ══════════════════════════════════
    RENDER QUESTION
-═══════════════════════════════════ */
-function renderQuestion(isBack) {
-  const q = QUESTIONS[currentQ];
-  const pct = ((currentQ + 1) / 4 * 100).toFixed(0);
+══════════════════════════════════ */
+function renderQ(isBack) {
+  const q = QS[currentQ];
+  const pct = ((currentQ+1)/4*100).toFixed(0);
+  document.getElementById('prog-fill').style.width  = pct+'%';
+  document.getElementById('prog-label').textContent = (currentQ+1)+' / 4';
+  document.getElementById('back-btn').style.visibility = currentQ===0 ? 'hidden' : 'visible';
 
-  document.getElementById('q-eyebrow').textContent = q.eyebrow;
-  document.getElementById('q-text').textContent = q.text;
-  document.getElementById('q-hint').textContent = q.hint;
-  document.getElementById('progress-fill').style.width = pct + '%';
-  document.getElementById('progress-label').textContent = (currentQ + 1) + ' / 4';
-  document.getElementById('back-btn').style.visibility = currentQ === 0 ? 'hidden' : 'visible';
+  const body = document.getElementById('q-body');
+  body.style.opacity='0';
+  body.style.transform= isBack ? 'translateX(-10px)' : 'translateX(10px)';
 
-  const optWrap = document.getElementById('options');
-  const qBody = document.querySelector('#screen-q .q-body');
+  setTimeout(()=>{
+    document.getElementById('q-context').innerHTML = q.context;
+    document.getElementById('q-step').textContent  = q.step;
+    document.getElementById('q-text').textContent  = q.text;
+    document.getElementById('q-hint').textContent  = q.hint;
+    document.getElementById('next-btn').textContent  = currentQ===3 ? '結果を見る' : '次へ';
+    document.getElementById('next-btn').disabled     = answers[currentQ]===null;
 
-  // animate out then in
-  qBody.style.opacity = '0';
-  setTimeout(() => {
-    optWrap.innerHTML = '';
-    q.choices.forEach((c, i) => {
+    const wrap = document.getElementById('options');
+    wrap.innerHTML='';
+    q.choices.forEach((c,i)=>{
       const div = document.createElement('div');
-      div.className = 'opt' + (answers[currentQ] === i ? ' selected' : '');
+      div.className = 'opt'+(answers[currentQ]===i?' selected':'');
       div.innerHTML = `
         <div class="opt-left">
           <div class="opt-text">${c.text}</div>
-          ${c.sub ? `<div class="opt-sub">${c.sub}</div>` : ''}
+          ${c.sub?`<div class="opt-sub">${c.sub}</div>`:''}
         </div>
         <div class="opt-radio"><div class="opt-dot"></div></div>`;
-      div.addEventListener('click', () => {
-        answers[currentQ] = i;
-        optWrap.querySelectorAll('.opt').forEach(el => el.classList.remove('selected'));
+      div.addEventListener('click',()=>{
+        answers[currentQ]=i;
+        wrap.querySelectorAll('.opt').forEach(e=>e.classList.remove('selected'));
         div.classList.add('selected');
-        document.getElementById('next-btn').disabled = false;
+        document.getElementById('next-btn').disabled=false;
       });
-      optWrap.appendChild(div);
+      wrap.appendChild(div);
     });
 
-    document.getElementById('next-btn').disabled = answers[currentQ] === null;
-    document.getElementById('next-btn').textContent = currentQ === 3 ? '診断結果を見る' : '次へ';
-    qBody.style.transition = 'none';
-    qBody.style.opacity = '0';
-    qBody.style.transform = isBack ? 'translateX(-12px)' : 'translateX(12px)';
-    requestAnimationFrame(() => {
-      qBody.style.transition = 'opacity .2s ease, transform .2s ease';
-      qBody.style.opacity = '1';
-      qBody.style.transform = 'none';
-    });
-  }, 80);
+    body.style.transition='opacity .2s ease, transform .2s ease';
+    requestAnimationFrame(()=>{ body.style.opacity='1'; body.style.transform='none'; });
+  },90);
 }
 
-/* ═══════════════════════════════════
-   CALC & RENDER RESULT
-═══════════════════════════════════ */
-function calcLoad() {
-  let think = 0, emo = 0, social = 0;
-  QUESTIONS.forEach((q, i) => {
-    if (answers[i] !== null) {
-      think  += q.choices[answers[i]].think;
-      emo    += q.choices[answers[i]].emo;
-      social += q.choices[answers[i]].social;
-    }
+/* ══════════════════════════════════
+   CALC
+══════════════════════════════════ */
+function calcLoad(){
+  let t=0,e=0,s=0;
+  QS.forEach((q,i)=>{
+    if(answers[i]!==null){ t+=q.choices[answers[i]].think; e+=q.choices[answers[i]].emo; s+=q.choices[answers[i]].social; }
   });
-  return {
-    think:  Math.min(100, think),
-    emo:    Math.min(100, emo),
-    social: Math.min(100, social),
-  };
+  return { think:Math.min(100,t), emo:Math.min(100,e), social:Math.min(100,s) };
 }
+function mFill(v){ return v<60?'#1a7a4a':v<82?'#f5a623':'#e03535'; }
+function mText(v){ return v<60?'var(--green)':v<82?'var(--amber)':'var(--red)'; }
+function mComment(v, label){
+  if(v<40) return label+'は余裕があります。';
+  if(v<60) return label+'の消費が出てきています。';
+  if(v<82) return label+'がかなり消耗しています。意識的に休憩を。';
+  return label+'がほぼ限界です。優先して休んでください。';
+}
+function siIdx(t,e,s){ const m=Math.max(t,e,s); return m<60?0:m<82?1:2; }
 
-function meterColor(v) { return v < 60 ? '#1a7a4a' : v < 82 ? '#92580a' : '#b03030'; }
-function meterBg(v)    { return v < 60 ? '#1a7a4a' : v < 82 ? '#f5a623' : '#e03535'; }
-function statusIdx(t, e, s) { const m = Math.max(t, e, s); return m < 60 ? 0 : m < 82 ? 1 : 2; }
+/* ══════════════════════════════════
+   RENDER RESULT
+══════════════════════════════════ */
+function renderResult(){
+  const {think,emo,social}=calcLoad();
+  const si=siIdx(think,emo,social);
+  const st=STATUS[si];
 
-function renderResult() {
-  const { think, emo, social } = calcLoad();
-  const si = statusIdx(think, emo, social);
-  const st = STATUS[si];
+  document.getElementById('status-hero').className='status-hero '+st.cls;
+  document.getElementById('r-badge').textContent  = st.key;
+  document.getElementById('r-title').textContent  = st.title;
+  document.getElementById('r-body').innerHTML     = st.body(think,emo,social);
 
-  // status card class
-  const card = document.getElementById('result-status');
-  card.className = 'result-status ' + st.cls;
-  document.getElementById('result-badge').textContent = st.key;
-  document.getElementById('result-title').textContent = st.title;
-  document.getElementById('result-sub').textContent = st.sub;
-  document.getElementById('result-log').textContent = st.logs[0];
-
-  // meters — animate in after paint
-  requestAnimationFrame(() => {
-    [['think', think], ['emo', emo], ['sio', social]].forEach(([k, v]) => {
-      setTimeout(() => {
-        document.getElementById(k + '-fill').style.width = v + '%';
-        document.getElementById(k + '-fill').style.background = meterBg(v);
-        document.getElementById(k + '-val').textContent = v + '%';
-        document.getElementById(k + '-val').style.color = meterColor(v);
-      }, 100);
+  // meters animate
+  requestAnimationFrame(()=>{
+    [['think',think,'思考エネルギー'],['emo',emo,'感情バッファ'],['sio',social,'対人負荷']].forEach(([k,v,label],idx)=>{
+      setTimeout(()=>{
+        document.getElementById(k+'-fill').style.cssText=`width:${v}%;background:${mFill(v)}`;
+        const val=document.getElementById(k+'-val');
+        val.textContent=v+'%'; val.style.color=mText(v);
+        document.getElementById(k+'-comment').textContent=mComment(v,label);
+      },idx*80);
     });
   });
 
   // note CTA
-  const cta = document.getElementById('note-cta');
-  if (si >= 1 && st.noteTitle) {
-    document.getElementById('note-cta-title').innerHTML = st.noteTitle;
-    document.getElementById('note-cta-sub').textContent = st.noteSub;
+  const cta=document.getElementById('note-cta');
+  if(si>=1 && st.noteTitle){
+    document.getElementById('note-title').textContent=st.noteTitle;
+    document.getElementById('note-sub').textContent  =st.noteSub;
     cta.classList.add('visible');
   } else {
     cta.classList.remove('visible');
   }
 }
 
-/* ═══════════════════════════════════
-   CANVAS / SHARE
-═══════════════════════════════════ */
-function rr(ctx, x, y, w, h, r, fill) {
+/* ══════════════════════════════════
+   CANVAS
+══════════════════════════════════ */
+function rr(ctx,x,y,w,h,r,fill){
   ctx.beginPath();
-  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
-  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
 }
-function rrS(ctx, x, y, w, h, r, stroke) {
-  ctx.beginPath();
-  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
-  ctx.strokeStyle = stroke || '#e5e5e3'; ctx.lineWidth = 1; ctx.stroke();
+function wrapText(ctx,text,x,y,maxW,lh){
+  let line='',cy=y;
+  for(const ch of text){
+    const t=line+ch;
+    if(ctx.measureText(t).width>maxW&&line){ctx.fillText(line,x,cy);line=ch;cy+=lh;}else line=t;
+  }
+  if(line)ctx.fillText(line,x,cy);
 }
+function buildCanvas(){
+  const cv=document.getElementById('share-canvas');
+  const ctx=cv.getContext('2d');
+  const W=1200,H=630;
+  const {think,emo,social}=calcLoad();
+  const si=siIdx(think,emo,social);
+  const st=STATUS[si];
+  const cols=['#1a7a4a','#8a5200','#a82828'];
+  const bgs =['#edf7f2','#fff4e0','#fdf0f0'];
+  const mcs =['#1a7a4a','#f5a623','#e03535'];
+  const col=cols[si],bg=bgs[si];
 
-function buildCanvas() {
-  const cv = document.getElementById('share-canvas');
-  const ctx = cv.getContext('2d');
-  const W = 1200, H = 630;
-  const { think, emo, social } = calcLoad();
-  const si = statusIdx(think, emo, social);
-  const st = STATUS[si];
-  const statusColors = ['#1a7a4a','#92580a','#b03030'];
-  const statusBgs    = ['#edf7f2','#fef3e2','#fdeaea'];
-  const meterFills   = ['#1a7a4a','#f5a623','#e03535'];
-  const col = statusColors[si];
-  const colBg = statusBgs[si];
-  const mFill = meterFills[si];
+  ctx.fillStyle='#f7f7f5';ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=col;ctx.fillRect(0,0,W,4);
 
-  // background — clean white
-  ctx.fillStyle = '#fafaf9'; ctx.fillRect(0,0,W,H);
+  const lx=80;
+  ctx.font='600 11px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
+  ctx.fillText('INTROVERT RESOURCE CHECKER · α',lx,64);
+  ctx.font='700 50px "Noto Sans JP",sans-serif';ctx.fillStyle='#1a1a18';
+  ctx.fillText('内向型リソース',lx,138);ctx.fillText('チェッカー',lx,198);
 
-  // subtle top accent line
-  ctx.fillStyle = col; ctx.fillRect(0, 0, W, 3);
+  ctx.font='600 12px "JetBrains Mono",monospace';
+  const bw=ctx.measureText(st.key).width+28;
+  rr(ctx,lx,218,bw,30,100,bg);
+  ctx.fillStyle=col;ctx.fillText(st.key,lx+14,237);
 
-  // left column
-  const lx = 80;
+  ctx.font='700 20px "Noto Sans JP",sans-serif';ctx.fillStyle='#1a1a18';
+  ctx.fillText(st.title,lx,280);
 
-  // eyebrow
-  ctx.font = '600 11px "JetBrains Mono",monospace';
-  ctx.fillStyle = '#a8a8a2';
-  ctx.fillText('INTROVERT RESOURCE CHECKER · α', lx, 70);
+  const subText=si===0?'思考・感情・対人、すべての指標が正常範囲内です。':
+                si===1?'エネルギー消費が多い状態です。意識的に休憩を。':
+                       'エネルギーがほぼ底をついています。今日は休んでください。';
+  ctx.font='400 13px "Noto Sans JP",sans-serif';ctx.fillStyle='#6b6b66';
+  wrapText(ctx,subText,lx,308,500,22);
 
-  // title
-  ctx.font = '700 52px "Noto Sans JP",sans-serif';
-  ctx.fillStyle = '#1a1a18';
-  ctx.fillText('内向型リソース', lx, 148);
-  ctx.fillText('チェッカー', lx, 210);
-
-  // status badge
-  const bLabel = st.key;
-  ctx.font = '600 12px "JetBrains Mono",monospace';
-  const bw = ctx.measureText(bLabel).width + 28;
-  rr(ctx, lx, 232, bw, 30, 100, colBg);
-  ctx.fillStyle = col; ctx.fillText(bLabel, lx+14, 252);
-
-  // status title
-  ctx.font = '700 20px "Noto Sans JP",sans-serif';
-  ctx.fillStyle = '#1a1a18';
-  ctx.fillText(st.title, lx, 298);
-
-  // status sub
-  ctx.font = '400 13px "Noto Sans JP",sans-serif';
-  ctx.fillStyle = '#6b6b66';
-  const subWords = st.sub;
-  // simple word wrap at ~380px
-  wrapText(ctx, subWords, lx, 322, 480, 20);
-
-  // meters
-  const my = 400, mw = 520, mh = 6;
-  const mLabels = ['思考エネルギー消費','感情バッファ消費','対人負荷'];
-  const mVals   = [think, emo, social];
-  const mColors = mVals.map(v => v < 60 ? '#1a7a4a' : v < 82 ? '#f5a623' : '#e03535');
-
-  mVals.forEach((v,i) => {
-    const y = my + i * 52;
-    ctx.font = '400 12px "JetBrains Mono",monospace'; ctx.fillStyle = '#a8a8a2';
-    ctx.fillText(mLabels[i], lx, y);
-    // track
-    rr(ctx, lx, y+8, mw, mh, 100, '#e5e5e3');
-    // fill
-    rr(ctx, lx, y+8, Math.max(mh, mw*v/100), mh, 100, mColors[i]);
-    // value
-    ctx.font = '600 14px "JetBrains Mono",monospace'; ctx.fillStyle = mColors[i];
-    ctx.fillText(v+'%', lx+mw+14, y+17);
+  const mLabels=['思考エネルギー消費','感情バッファ消費','対人負荷'];
+  const mVals=[think,emo,social];
+  mVals.forEach((v,i)=>{
+    const y=370+i*58;
+    ctx.font='400 12px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
+    ctx.fillText(mLabels[i],lx,y);
+    rr(ctx,lx,y+10,520,6,100,'#e8e8e4');
+    const fc=v<60?'#1a7a4a':v<82?'#f5a623':'#e03535';
+    rr(ctx,lx,y+10,Math.max(6,520*v/100),6,100,fc);
+    ctx.font='600 14px "JetBrains Mono",monospace';ctx.fillStyle=fc;
+    ctx.fillText(v+'%',lx+520+14,y+19);
   });
 
-  // divider
-  ctx.strokeStyle = '#e5e5e3'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(680,40); ctx.lineTo(680,H-40); ctx.stroke();
+  // note footer strip
+  if(si>=1){
+    rr(ctx,lx,544,600,46,10,'rgba(65,201,180,.08)');
+    ctx.strokeStyle='rgba(65,201,180,.4)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(lx,544,600,46,10);ctx.stroke();
+    rr(ctx,lx+12,555,44,24,6,'#41c9b4');
+    ctx.font='700 10px "JetBrains Mono",monospace';ctx.fillStyle='#fff';
+    ctx.fillText('note',lx+20,571);
+    ctx.font='500 13px "Noto Sans JP",sans-serif';ctx.fillStyle='#1a1a18';
+    ctx.fillText(st.noteTitle||'',lx+66,567);
+    ctx.font='400 11px "Noto Sans JP",sans-serif';ctx.fillStyle='#6b6b66';
+    ctx.fillText('note.com/osakanasansan',lx+66,582);
+  }
 
-  // right column — answers
-  const rx = 720;
-  ctx.font = '600 11px "JetBrains Mono",monospace'; ctx.fillStyle = '#a8a8a2';
-  ctx.fillText("TODAY'S ANSWERS", rx, 70);
+  ctx.strokeStyle='#e8e8e4';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(700,40);ctx.lineTo(700,H-40);ctx.stroke();
 
-  const qLabels = ['起床時','午前中','午後','いちばんしんどかった場面'];
-  QUESTIONS.forEach((q, qi) => {
-    const sel = answers[qi];
-    if (sel === null) return;
-    const c = q.choices[sel];
-    const ty = 100 + qi * 118;
+  const rx=740;
+  ctx.font='600 11px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
+  ctx.fillText("TODAY'S ANSWERS",rx,64);
 
-    // card
-    rr(ctx, rx, ty, 420, 100, 10, '#ffffff');
-    rrS(ctx, rx, ty, 420, 100, 10, '#e5e5e3');
-
-    // label
-    ctx.font = '600 10px "JetBrains Mono",monospace'; ctx.fillStyle = '#a8a8a2';
-    ctx.fillText(qLabels[qi].toUpperCase(), rx+16, ty+22);
-
-    // answer
-    ctx.font = '700 16px "Noto Sans JP",sans-serif'; ctx.fillStyle = '#1a1a18';
-    ctx.fillText(c.text, rx+16, ty+50);
-
-    // sub
-    if (c.sub) {
-      ctx.font = '400 12px "Noto Sans JP",sans-serif'; ctx.fillStyle = '#a8a8a2';
-      ctx.fillText(c.sub, rx+16, ty+72);
-    }
-
-    // cost pills
-    const pills = [
-      { label:'思考+'+c.think, color:'#378add' },
-      { label:'感情+'+c.emo,   color:'#9b59b6' },
-      { label:'対人+'+c.social,color:'#1a7a4a' },
-    ];
-    let px = rx+16;
-    ctx.font = '600 10px "JetBrains Mono",monospace';
-    pills.forEach(p => {
-      const pw = ctx.measureText(p.label).width + 14;
-      rr(ctx, px, ty+80, pw, 16, 100, p.color+'18');
-      ctx.fillStyle = p.color;
-      ctx.fillText(p.label, px+7, ty+92);
-      px += pw + 6;
+  const qLabels=['起床時','午前中','午後','いちばんしんどかった場面'];
+  QS.forEach((q,qi)=>{
+    const sel=answers[qi];if(sel===null)return;
+    const c=q.choices[sel],ty=88+qi*128;
+    rr(ctx,rx,ty,415,112,12,'#ffffff');
+    ctx.strokeStyle='#e8e8e4';ctx.lineWidth=1;
+    ctx.beginPath();ctx.roundRect(rx,ty,415,112,12);ctx.stroke();
+    ctx.font='600 10px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
+    ctx.fillText(qLabels[qi].toUpperCase(),rx+16,ty+22);
+    ctx.font='700 16px "Noto Sans JP",sans-serif';ctx.fillStyle='#1a1a18';
+    ctx.fillText(c.text,rx+16,ty+50);
+    if(c.sub){ctx.font='400 12px "Noto Sans JP",sans-serif';ctx.fillStyle='#ababA4';ctx.fillText(c.sub,rx+16,ty+70);}
+    const pills=[{l:'思考+'+c.think,c:'#378add'},{l:'感情+'+c.emo,c:'#9b59b6'},{l:'対人+'+c.social,c:'#1a7a4a'}];
+    let px=rx+16;
+    ctx.font='600 10px "JetBrains Mono",monospace';
+    pills.forEach(p=>{
+      const pw=ctx.measureText(p.l).width+14;
+      rr(ctx,px,ty+82,pw,20,100,p.c+'18');
+      ctx.fillStyle=p.c;ctx.fillText(p.l,px+7,ty+96);
+      px+=pw+6;
     });
   });
 
-  // footer
-  ctx.font = '400 11px "JetBrains Mono",monospace'; ctx.fillStyle = '#a8a8a2';
-  ctx.fillText('#内向型 #introvert', lx, H-36);
-  const fnote = 'note.com/osakanasansan';
-  ctx.fillText(fnote, W-lx-ctx.measureText(fnote).width, H-36);
-
+  ctx.font='400 11px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
+  ctx.fillText('#内向型 #introvert',lx,H-36);
+  const fn='shex1009-byte.github.io/introvert-checker';
+  ctx.fillText(fn,W-lx-ctx.measureText(fn).width,H-36);
   return cv;
 }
 
-function wrapText(ctx, text, x, y, maxW, lineH) {
-  const chars = text.split('');
-  let line = '';
-  let cy = y;
-  for (let i = 0; i < chars.length; i++) {
-    const test = line + chars[i];
-    if (ctx.measureText(test).width > maxW && line !== '') {
-      ctx.fillText(line, x, cy);
-      line = chars[i];
-      cy += lineH;
-    } else {
-      line = test;
-    }
-  }
-  if (line) ctx.fillText(line, x, cy);
+function saveImage(){
+  const a=document.createElement('a');
+  a.download='introvert-status.png';
+  a.href=buildCanvas().toDataURL('image/png');a.click();
 }
-
-function saveImage() {
-  const link = document.createElement('a');
-  link.download = 'introvert-status.png';
-  link.href = buildCanvas().toDataURL('image/png');
-  link.click();
-}
-
-function generateAndShare() {
-  const link = document.createElement('a');
-  link.download = 'introvert-status.png';
-  link.href = buildCanvas().toDataURL('image/png');
-  link.click();
-
-  const { think, emo, social } = calcLoad();
-  const si = statusIdx(think, emo, social);
-  const st = STATUS[si];
-  const noteLine = si >= 1
-    ? '\n\nnoteでゆるく楽になるヒントを書いています\nhttps://note.com/osakanasansan' : '';
-  const txt = '【内向型リソース・チェッカー】\n\n'
-    + '判定：' + st.title + '\n'
-    + '思考エネルギー消費 ' + think + '% / 感情バッファ消費 ' + emo + '% / 対人負荷 ' + social + '%'
-    + noteLine + '\n\n#内向型 #introvert';
-  setTimeout(() => window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(txt), '_blank'), 400);
+function generateAndShare(){
+  saveImage();
+  const {think,emo,social}=calcLoad();
+  const si=siIdx(think,emo,social);
+  const st=STATUS[si];
+  const noteLine=si>=1?'\n\nhttps://note.com/osakanasansan':'';
+  const txt='【内向型リソース・チェッカー】\n\n判定：'+st.title+'\n思考消費 '+think+'% / 感情消費 '+emo+'% / 対人負荷 '+social+'%'+noteLine+'\n\n#内向型 #introvert\nhttps://shex1009-byte.github.io/introvert-checker/';
+  setTimeout(()=>window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(txt),'_blank'),400);
 }
 </script>
 </body>
