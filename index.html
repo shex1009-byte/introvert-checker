@@ -12,235 +12,303 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:       #f7f7f5;
-  --surface:  #ffffff;
-  --border:   #e8e8e4;
-  --border2:  #d4d4ce;
-  --text:     #1a1a18;
-  --text2:    #6b6b66;
-  --text3:    #ababA4;
-  --green:    #1a7a4a;
-  --green-bg: #edf7f2;
-  --amber:    #8a5200;
-  --amber-bg: #fff4e0;
-  --red:      #a82828;
-  --red-bg:   #fdf0f0;
-  --note:     #41c9b4;
-  --sans: 'Noto Sans JP', sans-serif;
-  --mono: 'JetBrains Mono', monospace;
-  --r: 12px;
-  --r-lg: 16px;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f7f5;--surface:#fff;--border:#e8e8e4;--border2:#d4d4ce;
+  --text:#1a1a18;--text2:#6b6b66;--text3:#ababA4;
+  --green:#1a7a4a;--green-bg:#edf7f2;
+  --amber:#8a5200;--amber-bg:#fff4e0;
+  --red:#a82828;--red-bg:#fdf0f0;
+  --note:#41c9b4;
+  --sans:'Noto Sans JP',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:12px;--r-lg:16px
 }
-html { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100dvh; }
-body { min-height: 100dvh; display: flex; flex-direction: column; align-items: center; }
+html{background:var(--bg);color:var(--text);font-family:var(--sans);min-height:100dvh}
+body{min-height:100dvh;display:flex;flex-direction:column;align-items:center}
 
-/* ── SCREENS ── */
-.screen { display: none; flex-direction: column; width: 100%; max-width: 480px; min-height: 100dvh; padding: 0 24px; }
-.screen.active { display: flex; animation: si .22s ease; }
-@keyframes si { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:none} }
-.screen.back   { animation: sb .22s ease; }
-@keyframes sb  { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:none} }
+.screen{display:none;flex-direction:column;width:100%;max-width:480px;min-height:100dvh;padding:0 24px}
+.screen.active{display:flex;animation:si .22s ease}
+@keyframes si{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+.screen.back{animation:sb .22s ease}
+@keyframes sb{from{opacity:0;transform:translateX(-16px)}to{opacity:1;transform:none}}
 
-/* ── NAV ── */
-.nav { padding: 20px 0 0; display: flex; align-items: center; gap: 12px; min-height: 52px; }
-.back-btn {
-  background: none; border: none; cursor: pointer; color: var(--text3); font-size: 13px;
-  font-family: var(--sans); display: flex; align-items: center; gap: 5px; padding: 4px 0;
-  transition: color .15s; -webkit-tap-highlight-color: transparent; flex-shrink: 0;
-}
-.back-btn:hover { color: var(--text2); }
-.prog-bar { flex: 1; height: 2px; background: var(--border); border-radius: 100px; overflow: hidden; }
-.prog-fill { height: 100%; background: var(--text); border-radius: 100px; transition: width .35s cubic-bezier(.4,0,.2,1); }
-.prog-label { font-family: var(--mono); font-size: 11px; color: var(--text3); white-space: nowrap; flex-shrink: 0; }
+.nav{padding:20px 0 0;display:flex;align-items:center;gap:12px;min-height:52px}
+.back-btn{background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;font-family:var(--sans);display:flex;align-items:center;gap:5px;padding:4px 0;transition:color .15s;-webkit-tap-highlight-color:transparent;flex-shrink:0}
+.back-btn:hover{color:var(--text2)}
+.prog-bar{flex:1;height:2px;background:var(--border);border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;background:var(--text);border-radius:100px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+.prog-label{font-family:var(--mono);font-size:11px;color:var(--text3);white-space:nowrap;flex-shrink:0}
 
-/* ── BUTTONS ── */
-.btn-primary {
-  width: 100%; padding: 16px; background: var(--text); color: #fff; border: none;
-  border-radius: var(--r-lg); font-family: var(--sans); font-size: 15px; font-weight: 500;
-  cursor: pointer; transition: opacity .15s, transform .1s;
-  -webkit-tap-highlight-color: transparent;
-}
-.btn-primary:disabled { opacity: .3; cursor: default; }
-.btn-primary:not(:disabled):active { transform: scale(.98); opacity: .9; }
+.btn-primary{width:100%;padding:16px;background:var(--text);color:#fff;border:none;border-radius:var(--r-lg);font-family:var(--sans);font-size:15px;font-weight:500;cursor:pointer;transition:opacity .15s,transform .1s;-webkit-tap-highlight-color:transparent}
+.btn-primary:disabled{opacity:.3;cursor:default}
+.btn-primary:not(:disabled):active{transform:scale(.98);opacity:.9}
 
-/* ── START SCREEN ── */
-.start-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px 0 48px; }
-.start-tag {
-  font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: .08em; margin-bottom: 28px;
+/* ── START ── */
+.start-body{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  text-align:center;padding:40px 0 28px;justify-content:space-between
 }
-.start-title { font-size: clamp(28px,7vw,38px); font-weight: 700; line-height: 1.25; letter-spacing: -.02em; margin-bottom: 20px; }
-.start-title em { font-style: normal; border-bottom: 2.5px solid var(--text); padding-bottom: 1px; }
-.start-desc { font-size: 14px; color: var(--text2); line-height: 1.85; margin-bottom: 12px; }
+.start-tag{
+  font-family:var(--mono);font-size:10px;color:var(--text3);
+  letter-spacing:.18em;text-transform:uppercase;margin-bottom:0
+}
+/* 細い横罫線で囲むラベル */
+.start-tag-wrap{
+  display:flex;align-items:center;gap:14px;width:100%;margin-bottom:28px
+}
+.start-tag-wrap::before,.start-tag-wrap::after{
+  content:'';flex:1;height:0.5px;background:var(--border2)
+}
+.start-title{
+  letter-spacing:-.01em;line-height:1.1;margin-bottom:20px;width:100%
+}
+.start-title .line1{
+  display:block;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(14px,3.5vw,18px);
+  font-weight:300;
+  font-style:italic;
+  color:var(--text3);
+  letter-spacing:.1em;
+  margin-bottom:6px
+}
+.start-title .emphasis{
+  display:block;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(72px,21vw,100px);
+  font-weight:600;
+  color:var(--text);
+  line-height:.9;
+  letter-spacing:-.03em;
+  margin-bottom:10px
+}
+.start-title .line2{
+  display:block;
+  font-family:var(--sans);
+  font-size:clamp(13px,3.2vw,16px);
+  font-weight:300;
+  color:var(--text2);
+  letter-spacing:.04em
+}
+/* 区切り線 */
+.start-divider{
+  width:32px;height:0.5px;background:var(--border2);margin:0 auto 18px
+}
+.start-desc{
+  font-family:var(--sans);font-size:13px;font-weight:300;
+  color:var(--text2);line-height:1.9;margin-bottom:0;letter-spacing:.02em
+}
+.start-desc-wrap{margin-bottom:22px}
+.time-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  border:0.5px solid var(--border2);border-radius:0;
+  padding:5px 14px;font-size:11px;font-family:var(--mono);
+  font-weight:400;color:var(--text3);letter-spacing:.1em;
+  margin-bottom:24px;background:transparent
+}
+.time-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+.start-btn-wrap{width:100%;margin-bottom:20px}
+/* スタートボタン：角なしフラットで品格を出す */
+.btn-primary{
+  width:100%;padding:16px;background:var(--text);color:#fff;border:none;
+  border-radius:0;font-family:var(--sans);font-size:13px;font-weight:400;
+  letter-spacing:.12em;cursor:pointer;transition:opacity .2s,transform .1s;
+  -webkit-tap-highlight-color:transparent;text-transform:none
+}
+.btn-primary:disabled{opacity:.3;cursor:default}
+.btn-primary:not(:disabled):active{transform:scale(.99);opacity:.85}
+/* ステップリスト：罫線のみ、ボーダーレス */
+.start-steps{
+  width:100%;display:flex;flex-direction:column;text-align:left;
+  border-top:0.5px solid var(--border);border-bottom:0.5px solid var(--border);
+  border-radius:0;overflow:hidden;background:transparent
+}
+.step-row{
+  display:flex;align-items:center;gap:14px;
+  padding:9px 4px;border-bottom:0.5px solid var(--border);
+  font-size:11px;color:var(--text2);font-weight:300;letter-spacing:.03em
+}
+.step-row:last-child{border-bottom:none}
+.step-num{
+  font-family:var(--mono);font-size:10px;font-weight:400;
+  width:18px;height:18px;border-radius:50%;
+  border:0.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;color:var(--text3)
+}
+.step-num.step-zero{background:transparent;font-size:9px;color:var(--text3)}
 
-/* time badge */
-.time-badge {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: var(--surface); border: 1px solid var(--border); border-radius: 100px;
-  padding: 6px 14px; font-size: 13px; font-weight: 500; color: var(--text2);
-  margin-bottom: 36px;
+/* ── COMMUTE (STEP 0) ── */
+.commute-body{flex:1;display:flex;flex-direction:column;justify-content:center;padding:0 0 48px}
+.commute-eyebrow{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:16px}
+.commute-context{font-size:12px;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 13px;margin-bottom:24px;line-height:1.7}
+.commute-context strong{color:var(--text);font-weight:500}
+.commute-q{font-size:clamp(20px,5.5vw,26px);font-weight:700;line-height:1.4;margin-bottom:8px}
+.commute-hint{font-size:12px;color:var(--text3);margin-bottom:32px;line-height:1.6}
+/* 2択大ボタン */
+.commute-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:auto}
+.commute-opt{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  padding:28px 16px;border:1px solid var(--border);border-radius:var(--r-lg);
+  cursor:pointer;background:var(--surface);user-select:none;text-align:center;
+  transition:border-color .12s,background .12s,transform .1s;
+  -webkit-tap-highlight-color:transparent
 }
-.time-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
+.commute-opt:active{transform:scale(.97)}
+.commute-opt.selected{border-color:var(--text);border-width:1.5px;background:var(--bg)}
+.commute-opt-icon{font-size:28px;line-height:1}
+.commute-opt-text{font-size:15px;font-weight:700;color:var(--text)}
+.commute-opt-sub{font-size:11px;color:var(--text3);font-family:var(--mono)}
 
-.start-btn-wrap { margin-bottom: 32px; }
-.start-steps { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; background: var(--surface); }
-.step-row {
-  display: flex; align-items: center; gap: 14px; padding: 14px 18px;
-  border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text2);
-}
-.step-row:last-child { border-bottom: none; }
-.step-num {
-  font-family: var(--mono); font-size: 11px; font-weight: 600;
-  width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border2);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--text3);
-}
+/* ── QUESTION ── */
+.q-body{flex:1;display:flex;flex-direction:column;padding:36px 0 32px}
+.q-context{font-size:12px;color:var(--text2);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 13px;margin-bottom:20px;line-height:1.7}
+.q-context strong{color:var(--text);font-weight:500}
+.q-step{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:12px}
+.q-text{font-size:clamp(18px,5vw,22px);font-weight:700;line-height:1.45;margin-bottom:6px}
+.q-hint{font-size:12px;color:var(--text3);margin-bottom:28px;line-height:1.6}
+.options{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border:1px solid var(--border);border-radius:var(--r-lg);cursor:pointer;background:var(--surface);user-select:none;transition:border-color .12s,background .12s;-webkit-tap-highlight-color:transparent}
+.opt:active{transform:scale(.98)}
+.opt.selected{border-color:var(--text);border-width:1.5px;background:var(--bg)}
+.opt-left{display:flex;flex-direction:column;gap:3px;flex:1}
+.opt-text{font-size:15px;font-weight:500;color:var(--text)}
+.opt-sub{font-size:11px;color:var(--text3);font-family:var(--mono)}
+.opt-radio{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .12s,background .12s}
+.opt.selected .opt-radio{background:var(--text);border-color:var(--text)}
+.opt-dot{display:none;width:6px;height:6px;border-radius:50%;background:#fff}
+.opt.selected .opt-dot{display:block}
+.q-spacer{flex:1;min-height:24px}
 
-/* ── QUESTION SCREEN ── */
-.q-body { flex: 1; display: flex; flex-direction: column; padding: 36px 0 32px; transition: opacity .18s, transform .18s; }
-.q-context {
-  font-size: 12px; color: var(--text3); background: var(--surface); border: 1px solid var(--border);
-  border-radius: 8px; padding: 9px 13px; margin-bottom: 20px; line-height: 1.7;
+/* commute badge（Q2/Q3コンテキストに表示） */
+.commute-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--bg);border:1px solid var(--border);border-radius:6px;
+  padding:3px 8px;font-family:var(--mono);font-size:10px;color:var(--text3);
+  margin-left:4px;vertical-align:middle
 }
-.q-context strong { color: var(--text2); font-weight: 500; }
-.q-step { font-family: var(--mono); font-size: 11px; color: var(--text3); letter-spacing: .08em; margin-bottom: 12px; }
-.q-text { font-size: clamp(18px,5vw,22px); font-weight: 700; line-height: 1.45; margin-bottom: 6px; }
-.q-hint { font-size: 12px; color: var(--text3); margin-bottom: 28px; line-height: 1.6; }
-.options { display: flex; flex-direction: column; gap: 8px; }
-.opt {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 15px 18px; border: 1px solid var(--border); border-radius: var(--r-lg);
-  cursor: pointer; background: var(--surface); user-select: none;
-  transition: border-color .12s, background .12s; -webkit-tap-highlight-color: transparent;
-}
-.opt:active { transform: scale(.98); }
-.opt.selected { border-color: var(--text); border-width: 1.5px; background: var(--bg); }
-.opt-left { display: flex; flex-direction: column; gap: 3px; }
-.opt-text { font-size: 15px; font-weight: 500; color: var(--text); }
-.opt-sub  { font-size: 12px; color: var(--text3); }
-.opt-radio {
-  width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--border2); flex-shrink: 0; margin-left: 16px;
-  display: flex; align-items: center; justify-content: center; transition: border-color .12s, background .12s;
-}
-.opt.selected .opt-radio { background: var(--text); border-color: var(--text); }
-.opt-dot { display: none; width: 6px; height: 6px; border-radius: 50%; background: #fff; }
-.opt.selected .opt-dot { display: block; }
-.q-spacer { flex: 1; min-height: 24px; }
+.commute-badge.on{background:var(--amber-bg);border-color:rgba(138,82,0,.2);color:var(--amber)}
 
-/* ── RESULT SCREEN ── */
-.result-body { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 28px 0 48px; }
+/* ── RESULT ── */
+.result-body{flex:1;display:flex;flex-direction:column;gap:14px;padding:28px 0 48px}
+.status-hero{padding:24px;border-radius:var(--r-lg);border:1px solid var(--border);background:var(--surface)}
+.status-badge{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;display:inline-block;padding:4px 12px;border-radius:100px;margin-bottom:14px}
+.r-nominal  .status-badge{background:var(--green-bg);color:var(--green)}
+.r-throttle .status-badge{background:var(--amber-bg);color:var(--amber)}
+.r-down     .status-badge{background:var(--red-bg);color:var(--red)}
+.status-title{font-size:20px;font-weight:700;line-height:1.35;margin-bottom:10px}
+.status-body{font-size:14px;color:var(--text2);line-height:1.85}
+.status-body a{color:var(--text);font-weight:500;text-decoration:none;border-bottom:1px solid var(--text2)}
 
-/* status hero */
-.status-hero {
-  padding: 24px; border-radius: var(--r-lg); border: 1px solid var(--border); background: var(--surface);
-}
-.status-badge {
-  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .08em;
-  display: inline-block; padding: 4px 12px; border-radius: 100px; margin-bottom: 14px;
-}
-.r-nominal  .status-badge { background: var(--green-bg); color: var(--green); }
-.r-throttle .status-badge { background: var(--amber-bg); color: var(--amber); }
-.r-down     .status-badge { background: var(--red-bg);   color: var(--red);   }
-.status-title { font-size: 20px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; }
-.status-body  { font-size: 14px; color: var(--text2); line-height: 1.85; }
-/* inline note link inside status body */
-.status-body .note-inline {
-  color: var(--text); font-weight: 500; text-decoration: none;
-  border-bottom: 1px solid var(--text2); transition: border-color .15s;
-}
-.status-body .note-inline:hover { border-color: var(--text); }
+.note-cta{display:none;align-items:flex-start;gap:14px;padding:16px 18px;border-radius:var(--r-lg);border:1px solid rgba(65,201,180,.35);background:rgba(65,201,180,.06);text-decoration:none;-webkit-tap-highlight-color:transparent;transition:border-color .15s}
+.note-cta.visible{display:flex;animation:fadein .3s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.note-cta:active{opacity:.8}
+.note-cta-icon{width:34px;height:34px;border-radius:8px;background:var(--note);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.note-cta-icon span{font-family:var(--mono);font-size:11px;font-weight:700;color:#fff}
+.note-cta-label{font-family:var(--mono);font-size:10px;color:var(--note);letter-spacing:.06em;margin-bottom:3px;font-weight:600}
+.note-cta-title{font-size:14px;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:3px}
+.note-cta-sub{font-size:12px;color:var(--text2);line-height:1.6}
+.note-cta-arrow{font-size:14px;color:var(--text3);flex-shrink:0;align-self:center}
 
-/* meters */
-.meters-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; }
-.meters-title { font-family: var(--mono); font-size: 10px; color: var(--text3); letter-spacing: .08em; margin-bottom: 16px; }
-.meters { display: flex; flex-direction: column; gap: 16px; }
-.meter-row { display: flex; flex-direction: column; gap: 7px; }
-.meter-top { display: flex; justify-content: space-between; align-items: baseline; }
-.meter-key { font-size: 13px; color: var(--text2); }
-.meter-val { font-family: var(--mono); font-size: 13px; font-weight: 600; }
-.meter-track { height: 4px; background: var(--border); border-radius: 100px; overflow: hidden; }
-.meter-fill  { height: 100%; border-radius: 100px; transition: width .6s cubic-bezier(.4,0,.2,1); }
-.meter-comment { font-size: 11px; color: var(--text3); }
+.culprit-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:18px 20px}
+.culprit-label{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.1em;color:var(--text3);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.culprit-label::before{content:'';display:block;width:6px;height:6px;background:var(--red);border-radius:50%}
+.culprit-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px}
+.culprit-desc{font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.6}
+.culprit-input{width:100%;padding:12px 14px;border:1px solid var(--border2);border-radius:var(--r);background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;outline:none;transition:border-color .15s;-webkit-appearance:none}
+.culprit-input:focus{border-color:var(--text)}
+.culprit-input::placeholder{color:var(--text3)}
+.culprit-hint{font-size:11px;color:var(--text3);margin-top:6px;font-family:var(--mono)}
 
-/* note CTA — integrated, not banner */
-.note-cta {
-  display: none; align-items: flex-start; gap: 14px;
-  padding: 18px 20px; border-radius: var(--r-lg);
-  border: 1px solid rgba(65,201,180,.3); background: rgba(65,201,180,.05);
-  text-decoration: none; -webkit-tap-highlight-color: transparent;
-  transition: border-color .15s, background .15s;
-}
-.note-cta.visible { display: flex; animation: fadein .3s ease; }
-@keyframes fadein { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
-.note-cta:active { opacity: .8; }
-.note-cta-icon {
-  width: 36px; height: 36px; border-radius: 8px; background: var(--note);
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;
-}
-.note-cta-icon span { font-family: var(--mono); font-size: 11px; font-weight: 700; color: #fff; }
-.note-cta-body {}
-.note-cta-label { font-family: var(--mono); font-size: 10px; color: var(--note); letter-spacing: .06em; margin-bottom: 4px; font-weight: 600; }
-.note-cta-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 4px; }
-.note-cta-sub   { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.meters-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:20px}
+.meters-title{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.08em;margin-bottom:16px}
+.meters{display:flex;flex-direction:column;gap:18px}
+.meter-row{display:flex;flex-direction:column;gap:6px}
+.meter-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.meter-key{font-size:13px;color:var(--text2)}
+.meter-val{font-family:var(--mono);font-size:13px;font-weight:600;flex-shrink:0}
+.meter-track{height:4px;background:var(--border);border-radius:100px;overflow:hidden}
+.meter-fill{height:100%;border-radius:100px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.meter-sub{font-size:11px;color:var(--text3);font-family:var(--mono);padding:5px 9px;background:var(--bg);border-radius:6px;line-height:1.5;display:none}
+.meter-sub.visible{display:block}
+.meter-comment{font-size:11px;color:var(--text3);margin-top:2px}
 
-/* share */
-.share-col { display: flex; flex-direction: column; gap: 8px; }
-.share-btn {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  padding: 15px; border-radius: var(--r-lg); border: 1px solid var(--border);
-  background: var(--surface); color: var(--text); font-family: var(--sans);
-  font-size: 14px; font-weight: 500; cursor: pointer;
-  -webkit-tap-highlight-color: transparent; transition: opacity .15s;
-}
-.share-btn:active { opacity: .7; }
-.share-btn.primary { background: var(--text); color: #fff; border-color: var(--text); }
-.x-label { font-family: var(--mono); font-weight: 700; font-size: 14px; }
-
-.retry-btn {
-  background: none; border: none; color: var(--text3); font-family: var(--sans);
-  font-size: 13px; cursor: pointer; text-align: center; padding: 8px; width: 100%;
-  -webkit-tap-highlight-color: transparent;
-}
-.footer-note { font-size: 11px; color: var(--text3); text-align: center; line-height: 1.9; margin-top: 4px; }
-.footer-note a { color: var(--text3); }
-
-#share-canvas { display: none; }
+.share-col{display:flex;flex-direction:column;gap:8px}
+.share-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:15px;border-radius:var(--r-lg);border:1px solid var(--border);background:var(--surface);color:var(--text);font-family:var(--sans);font-size:14px;font-weight:500;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:opacity .15s}
+.share-btn:active{opacity:.7}
+.share-btn.primary{background:var(--text);color:#fff;border-color:var(--text)}
+.x-label{font-family:var(--mono);font-weight:700;font-size:14px}
+.retry-btn{background:none;border:none;color:var(--text3);font-family:var(--sans);font-size:13px;cursor:pointer;text-align:center;padding:8px;width:100%;-webkit-tap-highlight-color:transparent}
+.footer-note{font-size:11px;color:var(--text3);text-align:center;line-height:1.9;margin-top:4px}
+.footer-note a{color:var(--text3)}
+#share-canvas{display:none}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════
-     START
-══════════════════════════ -->
+<!-- ════════════ START ════════════ -->
 <div class="screen active" id="screen-start">
   <div class="start-body">
-    <div class="start-tag">INTROVERT RESOURCE CHECKER · α</div>
-    <h1 class="start-title">今日の<em>消耗</em>、<br>ちゃんと言葉にしよう。</h1>
-    <p class="start-desc">
-      「なんとなく疲れた」は感覚じゃなくて、ちゃんと理由がある。<br>
-      4問に答えるだけで、今日のエネルギー消費を数値で確認できます。
-    </p>
-    <div class="time-badge">
-      <span class="time-badge-dot"></span>
-      所要時間：約1分
+    <div class="start-tag-wrap">
+      <span class="start-tag">Introvert Resource Checker</span>
     </div>
-    <div class="start-btn-wrap">
-      <button class="btn-primary" onclick="goTo('screen-q',1)">診断をはじめる</button>
+    <div>
+      <h1 class="start-title">
+        <span class="line1">今日の</span>
+        <span class="emphasis">消耗</span>
+        <span class="line2">ちゃんと<br>言葉にしよう。</span>
+      </h1>
+      <div class="start-divider"></div>
+      <div class="start-desc-wrap">
+        <p class="start-desc">「なんとなく疲れた」は感覚じゃなくて、<br>ちゃんと理由がある。<br>5問に答えるだけで、<br>今日のエネルギー消費を数値で確認できます。</p>
+      </div>
+      <div class="time-badge"><span class="time-dot"></span>所要時間：約1分</div>
     </div>
-    <div class="start-steps">
-      <div class="step-row"><span class="step-num">1</span>起床時のコンディション</div>
-      <div class="step-row"><span class="step-num">2</span>午前中の過ごし方</div>
-      <div class="step-row"><span class="step-num">3</span>午後の過ごし方</div>
-      <div class="step-row"><span class="step-num">4</span>今日いちばんしんどかった場面</div>
+    <div style="width:100%">
+      <div class="start-btn-wrap"><button class="btn-primary" onclick="goTo('screen-commute')">診断をはじめる</button></div>
+      <div class="start-steps">
+        <div class="step-row"><span class="step-num step-zero">0</span>通勤・外出の有無</div>
+        <div class="step-row"><span class="step-num">1</span>今日の出発点（睡眠×連続稼働）</div>
+        <div class="step-row"><span class="step-num">2</span>午前中の過ごし方</div>
+        <div class="step-row"><span class="step-num">3</span>午後の過ごし方</div>
+        <div class="step-row"><span class="step-num">4</span>今日のいちばんしんどかった場面</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════
-     QUESTION
-══════════════════════════ -->
+<!-- ════════════ COMMUTE (STEP 0) ════════════ -->
+<div class="screen" id="screen-commute">
+  <div class="nav">
+    <button class="back-btn" onclick="goTo('screen-start',null,true)">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      戻る
+    </button>
+  </div>
+  <div class="commute-body">
+    <div class="commute-eyebrow">STEP 0 — 通勤・外出の有無</div>
+    <div class="commute-context">通勤・外出は<strong>刺激量と移動疲労</strong>が重なるため、在宅とは別の消耗が発生します。この1問が診断精度を大きく左右します。</div>
+    <div class="commute-q">今日、通勤や外出は<br>ありましたか？</div>
+    <div class="commute-hint">往復の移動も含みます。</div>
+    <div class="commute-options">
+      <div class="commute-opt" id="commute-yes" onclick="selectCommute(true)">
+        <div class="commute-opt-icon">🚃</div>
+        <div class="commute-opt-text">あった</div>
+        <div class="commute-opt-sub">通勤・外出あり</div>
+      </div>
+      <div class="commute-opt" id="commute-no" onclick="selectCommute(false)">
+        <div class="commute-opt-icon">🏠</div>
+        <div class="commute-opt-text">なかった</div>
+        <div class="commute-opt-sub">在宅・テレワーク</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ QUESTION ════════════ -->
 <div class="screen" id="screen-q">
   <div class="nav">
     <button class="back-btn" id="back-btn" onclick="goBack()">
@@ -252,7 +320,7 @@ body { min-height: 100dvh; display: flex; flex-direction: column; align-items: c
   </div>
   <div class="q-body" id="q-body">
     <div class="q-context" id="q-context"></div>
-    <div class="q-step" id="q-step">STEP 1</div>
+    <div class="q-step" id="q-step"></div>
     <div class="q-text" id="q-text"></div>
     <div class="q-hint" id="q-hint"></div>
     <div class="options" id="options"></div>
@@ -261,431 +329,530 @@ body { min-height: 100dvh; display: flex; flex-direction: column; align-items: c
   </div>
 </div>
 
-<!-- ══════════════════════════
-     RESULT
-══════════════════════════ -->
+<!-- ════════════ RESULT ════════════ -->
 <div class="screen" id="screen-result">
   <div class="nav">
     <button class="back-btn" onclick="goTo('screen-q',4,true)">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7l4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       戻る
     </button>
-    <span style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-left:auto;">診断結果</span>
+    <span style="font-family:var(--mono);font-size:11px;color:var(--text3);margin-left:auto">診断結果</span>
   </div>
-
   <div class="result-body">
-
     <div class="status-hero" id="status-hero">
       <div class="status-badge" id="r-badge">NOMINAL</div>
       <div class="status-title" id="r-title"></div>
-      <div class="status-body"  id="r-body"></div>
+      <div class="status-body" id="r-body"></div>
     </div>
-
+    <a class="note-cta" id="note-cta" href="https://note.com/osakanasansan" target="_blank" rel="noopener">
+      <div class="note-cta-icon"><span>note</span></div>
+      <div style="flex:1">
+        <div class="note-cta-label">おさかなのnote</div>
+        <div class="note-cta-title" id="note-title"></div>
+        <div class="note-cta-sub" id="note-sub"></div>
+      </div>
+      <div class="note-cta-arrow">→</div>
+    </a>
+    <input type="hidden" id="culprit-input" value="">
     <div class="meters-card">
       <div class="meters-title">ENERGY LOG</div>
       <div class="meters">
         <div class="meter-row">
-          <div class="meter-top">
-            <span class="meter-key">思考エネルギー消費</span>
-            <span class="meter-val" id="think-val" style="color:var(--text3)">—</span>
-          </div>
+          <div class="meter-top"><span class="meter-key">意思決定リソース</span><span class="meter-val" id="think-val" style="color:var(--text3)">—</span></div>
           <div class="meter-track"><div class="meter-fill" id="think-fill"></div></div>
+          <div class="meter-sub" id="think-sub">何食べるか選ぶのも嫌な状態</div>
           <div class="meter-comment" id="think-comment"></div>
         </div>
         <div class="meter-row">
-          <div class="meter-top">
-            <span class="meter-key">感情バッファ消費</span>
-            <span class="meter-val" id="emo-val" style="color:var(--text3)">—</span>
-          </div>
+          <div class="meter-top"><span class="meter-key">愛想笑いキャパ</span><span class="meter-val" id="emo-val" style="color:var(--text3)">—</span></div>
           <div class="meter-track"><div class="meter-fill" id="emo-fill"></div></div>
+          <div class="meter-sub" id="emo-sub">もう顔の筋肉が動かない状態</div>
           <div class="meter-comment" id="emo-comment"></div>
         </div>
         <div class="meter-row">
-          <div class="meter-top">
-            <span class="meter-key">対人負荷</span>
-            <span class="meter-val" id="sio-val" style="color:var(--text3)">—</span>
-          </div>
+          <div class="meter-top"><span class="meter-key">人と話すコスト</span><span class="meter-val" id="sio-val" style="color:var(--text3)">—</span></div>
           <div class="meter-track"><div class="meter-fill" id="sio-fill"></div></div>
+          <div class="meter-sub" id="sio-sub">返信を見るだけで疲れる状態</div>
           <div class="meter-comment" id="sio-comment"></div>
         </div>
       </div>
     </div>
-
-    <a class="note-cta" id="note-cta" href="https://note.com/osakanasansan" target="_blank" rel="noopener">
-      <div class="note-cta-icon"><span>note</span></div>
-      <div class="note-cta-body">
-        <div class="note-cta-label">おさかなのnote</div>
-        <div class="note-cta-title" id="note-title"></div>
-        <div class="note-cta-sub"   id="note-sub"></div>
-      </div>
-    </a>
-
     <div class="share-col">
-      <button class="share-btn primary" onclick="generateAndShare()">
-        <span class="x-label">𝕏</span> 診断結果をシェア
-      </button>
-      <button class="share-btn" onclick="saveImage()">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v8M4 6l3 3 3-3M2 11h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        画像を保存
-      </button>
+      <button class="share-btn primary" onclick="generateAndShare()"><span class="x-label">𝕏</span> 診断結果をシェア</button>
     </div>
-
     <button class="retry-btn" onclick="retry()">もう一度診断する</button>
-    <div class="footer-note">
-      内向型リソース・チェッカー α版<br>
-      <a href="https://note.com/osakanasansan" target="_blank">note</a>
-    </div>
+    <div class="footer-note">内向型リソース・チェッカー<br><a href="https://note.com/osakanasansan" target="_blank">note</a></div>
   </div>
 </div>
 
 <canvas id="share-canvas" width="1200" height="630"></canvas>
 
 <script>
-/* ══════════════════════════════════
-   QUESTIONS
-══════════════════════════════════ */
+/* ════════════════════════════════════════
+   COMMUTE PARAMETER
+   通勤ありの場合、Q2/Q3の合計に加算するボーナス
+   思考+6 / 感情+10 / 対人+8
+   （電車内の刺激・他人との密着・移動疲労）
+════════════════════════════════════════ */
+const COMMUTE_BONUS = { think: 6, emo: 10, social: 8 };
+let hasCommute = null; // null=未選択, true=あり, false=なし
+
+function selectCommute(val) {
+  hasCommute = val;
+  document.getElementById('commute-yes').classList.toggle('selected', val === true);
+  document.getElementById('commute-no').classList.toggle('selected', val === false);
+  // 少し待ってから次の画面へ（選択の視覚フィードバックのため）
+  setTimeout(() => goTo('screen-q', 1), 280);
+}
+
+/* ════════════════════════════════════════
+   QUESTIONS (STEP 1〜4)
+   Q2/Q3: 通勤選択肢を削除（隠しパラメータ化）
+   選択肢は3択 + 休んでいた
+════════════════════════════════════════ */
 const QS = [
   {
-    step:    'STEP 1 — 今日の出発点',
-    context: '内向型の消耗は、その日の<strong>初期エネルギー量</strong>に大きく左右されます。',
-    text:    '起きたとき、どんな感じでしたか？',
-    hint:    '正直に選んでください。',
+    step: 'STEP 1 — 今日の出発点',
+    context: '内向型の消耗は、その日だけでなく<strong>前日・前々日の疲れの蓄積</strong>に大きく左右されます。',
+    text: '起きたとき、どんな感じでしたか？',
+    hint: '今日だけでなく、ここ数日の疲れも含めて正直に選んでください。',
     choices: [
-      { text:'よく眠れた',          sub:'充電ほぼ完了',      think: 0,  emo: 0,  social: 0  },
-      { text:'まあまあ眠れた',       sub:'7〜8割充電',        think: 6,  emo: 6,  social: 3  },
-      { text:'あまり眠れなかった',   sub:'4〜5割充電',        think:16,  emo:18,  social: 8  },
-      { text:'ほとんど眠れなかった', sub:'充電切れ気味',      think:24,  emo:28,  social:12  },
-    ]
+      { text:'すっきり起きられた',        sub:'充電完了 / 連続稼働なし', think:0,  emo:0,  social:0,  baseMult:1.0  },
+      { text:'まあまあ眠れたが、少し重い', sub:'7割充電 / 2〜3日連続',   think:8,  emo:8,  social:4,  baseMult:1.1  },
+      { text:'眠れたが疲れが抜けていない', sub:'5割充電 / 4〜5日連続',   think:18, emo:20, social:10, baseMult:1.25 },
+      { text:'眠れず、すでに限界に近い',   sub:'充電切れ / 連戦中',      think:28, emo:32, social:14, baseMult:1.45 },
+    ],
   },
   {
-    step:    'STEP 2 — 午前中の消費',
-    context: '内向型は<strong>対人場面</strong>で外向型の数倍エネルギーを使います。午前中の過ごし方を教えてください。',
-    text:    '午前中はどう過ごしましたか？',
-    hint:    '複数あった場合は、いちばん負荷が高かったものを選んでください。',
+    step: 'STEP 2 — 午前中の消費',
+    contextBase: '内向型は対人場面で外向型の<strong>数倍の処理コスト</strong>を使います。',
+    contextCommute: '通勤分の消耗は自動で加算されます。',
+    text: '午前中はどう過ごしましたか？',
+    hint: '複数あった場合は、いちばん負荷が高かったものを選んでください。',
     choices: [
-      { text:'ひとりで作業・在宅',      sub:'対人なし',              think:12, emo: 5, social: 2  },
-      { text:'オンライン会議・打合せ',  sub:'画面越しの消耗',         think:14, emo:12, social:16  },
-      { text:'対面ミーティング・外出',  sub:'気を遣う場面が多い',     think:16, emo:16, social:24  },
-      { text:'休んでいた',              sub:'回復モード',             think: 0, emo: 0, social: 0  },
-    ]
+      { text:'ひとりで作業・集中できた',          sub:'対人なし、自分のペース',   think:12, emo:5,  social:2,  isRest:false },
+      { text:'会議・打合せ中心',                  sub:'気を遣う時間が続いた',     think:15, emo:14, social:20, isRest:false },
+      { text:'人と会う予定が重なった',             sub:'複数の対人が続いた',       think:12, emo:16, social:22, isRest:false },
+      { text:'休んでいた',                         sub:'疲れは少し残る',           think:0,  emo:0,  social:0,  isRest:true  },
+    ],
   },
   {
-    step:    'STEP 3 — 午後の消費',
-    context: '午後になると<strong>感情バッファ</strong>が減り、ちょっとしたことでも疲れを感じやすくなります。',
-    text:    '午後はどう過ごしましたか？\nまたはこれから過ごす予定は？',
-    hint:    '複数あった場合は、いちばん負荷が高かったものを選んでください。',
+    step: 'STEP 3 — 午後の消費',
+    contextBase: '午後になると<strong>愛想笑いキャパ</strong>が急激に減ります。同じ場面でも午前より消耗しやすい時間帯です。',
+    contextCommute: '通勤分の消耗は自動で加算されます。',
+    text: '午後はどう過ごしましたか？\nまたはこれから過ごす予定は？',
+    hint: '複数あった場合は、いちばん負荷が高かったものを選んでください。',
     choices: [
-      { text:'ひとりで作業・在宅',        sub:'集中できる時間',          think:14, emo: 5, social: 2 },
-      { text:'打合せ・商談・会議',        sub:'人と話す時間',            think:14, emo:14, social:20 },
-      { text:'外出・移動・人混み',        sub:'刺激が多い環境',          think: 8, emo:16, social:12 },
-      { text:'休む予定 / まだわからない', sub:'',                        think: 0, emo: 0, social: 0 },
-    ]
+      { text:'ひとりで作業・集中できた',          sub:'対人なし、自分のペース',   think:14, emo:5,  social:2,  isRest:false },
+      { text:'会議・打合せ中心',                  sub:'気を遣う時間が続いた',     think:14, emo:16, social:22, isRest:false },
+      { text:'人と会う予定が重なった',             sub:'複数の対人が続いた',       think:10, emo:18, social:20, isRest:false },
+      { text:'休む予定 / まだわからない',          sub:'疲れは少し残る',           think:0,  emo:0,  social:0,  isRest:true  },
+    ],
   },
   {
-    step:    'STEP 4 — 対人ピーク',
-    context: '1日の中の<strong>ピーク負荷</strong>が、消耗感の大部分を決めます。',
-    text:    '今日いちばんしんどかった場面は？',
-    hint:    '「とくになし」も立派な回答です。',
+    step: 'STEP 4 — 対人ピーク',
+    context: '1日のなかの<strong>ピーク負荷</strong>が、消耗感の大部分を決めます。',
+    text: '今日いちばんしんどかった場面は？',
+    hint: '「とくになし」も立派な回答です。',
     choices: [
-      { text:'とくになかった',              sub:'穏やかな1日',              think: 0, emo: 0,  social: 0  },
-      { text:'急な連絡・予定外の対応',      sub:'心の準備ができなかった',    think: 8, emo:12,  social: 8  },
-      { text:'気を遣う食事・雑談の場',      sub:'逃げ場がなかった',          think: 5, emo:14,  social:18  },
-      { text:'長時間の議論・意思決定',      sub:'感情も思考も削られた',       think:18, emo:22,  social:14  },
-    ]
+      { text:'とくになかった',          sub:'穏やかな1日',              think:0,  emo:0,  social:0  },
+      { text:'急な連絡・予定外の対応',  sub:'心の準備ができなかった',    think:8,  emo:14, social:8  },
+      { text:'気を遣う食事・雑談の場',  sub:'逃げ場がなかった',          think:5,  emo:16, social:20 },
+      { text:'長時間の議論・意思決定',  sub:'感情も思考も削られた',       think:20, emo:24, social:16 },
+    ],
   },
 ];
 
-/* ══════════════════════════════════
-   STATUS DEFINITIONS
-══════════════════════════════════ */
 const STATUS = [
-  {
-    key:'NOMINAL', cls:'r-nominal',
-    title:'今日はよく乗り越えています',
-    body: (t,e,s) => `思考・感情・対人、すべての指標が正常範囲内です。このまま無理せず、自分のペースを守ってください。`,
-    noteTitle: '内向型として、ゆるく生きるヒント',
-    noteSub:   '内向的な性格に合った"ゆるい生き方"をnoteで発信しています。よかったら覗いてみてください。',
-  },
-  {
-    key:'THROTTLING', cls:'r-throttle',
-    title:'省エネモードに入っています',
-    body: (t,e,s) => {
-      const high = e > t && e > s ? '感情バッファ' : t > s ? '思考エネルギー' : '対人負荷';
-      return `特に<strong>${high}</strong>の消費が多い状態です。次の予定の前に、少しひとりになれる時間を確保してください。なぜ内向型はこうなりやすいのか、<a class="note-inline" href="https://note.com/osakanasansan" target="_blank">noteで詳しく書いています →</a>`;
-    },
-    noteTitle: '頑張らなくていい理由、書きました',
-    noteSub:   '消耗しやすさの仕組みと、ゆるく楽になるヒントをnoteにまとめています。',
-  },
-  {
-    key:'OVERLOADED', cls:'r-down',
-    title:'限界に近づいています',
-    body: (t,e,s) => `エネルギーがほぼ底をついています。これ以上無理をすると、翌日以降に響きます。今日はもうひとりになれる場所と時間を優先してください。同じように限界まで頑張ってしまう方へ、<a class="note-inline" href="https://note.com/osakanasansan" target="_blank">noteで書いていることがあります →</a>`,
-    noteTitle: '「頑張りすぎる自分」を卒業した話',
-    noteSub:   '適応障害で休職した経験から、消耗しないための考え方をnoteに書いています。',
-  },
+  { key:'NOMINAL',    cls:'r-nominal',  title:'今日はよく乗り越えています',
+    body:()=>`意思決定リソース・愛想笑いキャパ・人と話すコスト、すべての指標が正常範囲内です。このまま無理せず、自分のペースを守ってください。`,
+    noteTitle:'内向型として、ゆるく生きるヒント',
+    noteSub:'内向的な性格に合った"ゆるい生き方"をnoteで発信しています。よかったら覗いてみてください。' },
+  { key:'THROTTLING', cls:'r-throttle', title:'省エネモードに入っています',
+    body:(t,e,s)=>{ const h=e>=t&&e>=s?'愛想笑いキャパ':t>=s?'意思決定リソース':'人と話すコスト'; return `特に<strong>${h}</strong>の消費が多い状態です。次の予定の前に、少しひとりになれる時間を確保してください。`; },
+    noteTitle:'頑張らなくていい理由、書きました',
+    noteSub:'消耗しやすさの仕組みと、ゆるく楽になるヒントをnoteにまとめています。' },
+  { key:'OVERLOADED', cls:'r-down',     title:'限界に近づいています',
+    body:()=>`エネルギーがほぼ底をついています。これ以上無理をすると、翌日以降に響きます。今日はもうひとりになれる場所と時間を優先してください。同じように限界まで頑張ってしまう方へ、<a href="https://note.com/osakanasansan" target="_blank">noteで書いていることがあります →</a>`,
+    noteTitle:'「頑張りすぎる自分」を卒業した話',
+    noteSub:'適応障害で休職した経験から、消耗しないための考え方をnoteに書いています。' },
 ];
 
-/* ══════════════════════════════════
-   STATE
-══════════════════════════════════ */
 const answers = [null, null, null, null];
 let currentQ = 0;
 
-/* ══════════════════════════════════
+/* ════════════════════════════════════════
+   CALC
+   通勤ありの場合、Q2/Q3の有効なターン（isRestでない）に COMMUTE_BONUS を加算
+════════════════════════════════════════ */
+function calcLoad() {
+  const q0 = answers[0] !== null ? QS[0].choices[answers[0]] : null;
+  const bm = q0 ? q0.baseMult : 1.0;
+  const bT = q0 ? q0.think : 0, bE = q0 ? q0.emo : 0, bS = q0 ? q0.social : 0;
+  let t = bT, e = bE, s = bS;
+
+  for (let i = 1; i < 4; i++) {
+    if (answers[i] === null) continue;
+    const c = QS[i].choices[answers[i]];
+    if (c.isRest) {
+      // 休んでいた → 起床スコアの30%を持ち越す
+      t += bT * 0.3; e += bE * 0.3; s += bS * 0.3;
+    } else {
+      t += c.think; e += c.emo; s += c.social;
+      // Q2 or Q3 かつ 通勤あり → ボーナス加算
+      if (hasCommute && (i === 1 || i === 2)) {
+        t += COMMUTE_BONUS.think; e += COMMUTE_BONUS.emo; s += COMMUTE_BONUS.social;
+      }
+    }
+  }
+  return {
+    think:  Math.min(100, Math.round(bT + (t - bT) * bm)),
+    emo:    Math.min(100, Math.round(bE + (e - bE) * bm)),
+    social: Math.min(100, Math.round(bS + (s - bS) * bm)),
+  };
+}
+
+function mFill(v) { return v < 60 ? '#1a7a4a' : v < 82 ? '#f5a623' : '#e03535'; }
+function mText(v) { return v < 60 ? 'var(--green)' : v < 82 ? 'var(--amber)' : 'var(--red)'; }
+function siIdx(t, e, s) { return Math.max(t, e, s) < 60 ? 0 : Math.max(t, e, s) < 82 ? 1 : 2; }
+function mComment(v, l) {
+  if (v < 40) return l + 'には余裕があります。';
+  if (v < 60) return '少し消費が出てきています。';
+  if (v < 82) return 'かなり消耗しています。意識的に休憩を。';
+  return 'ほぼ限界です。今すぐ休んでください。';
+}
+
+/* ════════════════════════════════════════
    NAVIGATION
-══════════════════════════════════ */
+════════════════════════════════════════ */
 function goTo(id, qIdx, isBack) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active','back'));
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active', 'back'));
   const el = document.getElementById(id);
   if (isBack) el.classList.add('back');
   el.classList.add('active');
-  if (id === 'screen-q')      { currentQ = (qIdx||1)-1; renderQ(); }
+  if (id === 'screen-q') { currentQ = (qIdx || 1) - 1; renderQ(); }
   if (id === 'screen-result') renderResult();
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
+
 function goBack() {
-  if (currentQ === 0) goTo('screen-start', null, true);
+  if (currentQ === 0) goTo('screen-commute', null, true);
   else { currentQ--; renderQ(true); }
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
+
 function nextQ() {
   if (answers[currentQ] === null) return;
   if (currentQ < 3) { currentQ++; renderQ(); }
   else goTo('screen-result');
-  window.scrollTo(0,0);
+  window.scrollTo(0, 0);
 }
-function retry() { answers.fill(null); goTo('screen-start',null,true); }
 
-/* ══════════════════════════════════
+function retry() {
+  answers.fill(null);
+  hasCommute = null;
+  document.getElementById('commute-yes').classList.remove('selected');
+  document.getElementById('commute-no').classList.remove('selected');
+  goTo('screen-start', null, true);
+}
+
+/* ════════════════════════════════════════
    RENDER QUESTION
-══════════════════════════════════ */
+   Q2/Q3 のコンテキストに通勤バッジを表示
+════════════════════════════════════════ */
 function renderQ(isBack) {
   const q = QS[currentQ];
-  const pct = ((currentQ+1)/4*100).toFixed(0);
-  document.getElementById('prog-fill').style.width  = pct+'%';
-  document.getElementById('prog-label').textContent = (currentQ+1)+' / 4';
-  document.getElementById('back-btn').style.visibility = currentQ===0 ? 'hidden' : 'visible';
+  document.getElementById('prog-fill').style.width = ((currentQ + 1) / 4 * 100) + '%';
+  document.getElementById('prog-label').textContent = (currentQ + 1) + ' / 4';
+  document.getElementById('back-btn').style.visibility = 'visible'; // STEP0に戻れる
 
   const body = document.getElementById('q-body');
-  body.style.opacity='0';
-  body.style.transform= isBack ? 'translateX(-10px)' : 'translateX(10px)';
+  body.style.opacity = '0';
+  body.style.transform = isBack ? 'translateX(-10px)' : 'translateX(10px)';
 
-  setTimeout(()=>{
-    document.getElementById('q-context').innerHTML = q.context;
-    document.getElementById('q-step').textContent  = q.step;
-    document.getElementById('q-text').textContent  = q.text;
-    document.getElementById('q-hint').textContent  = q.hint;
-    document.getElementById('next-btn').textContent  = currentQ===3 ? '結果を見る' : '次へ';
-    document.getElementById('next-btn').disabled     = answers[currentQ]===null;
+  setTimeout(() => {
+    // コンテキスト（Q2/Q3は通勤バッジ付き）
+    let ctx = q.context || '';
+    if ((currentQ === 1 || currentQ === 2) && q.contextBase) {
+      const badge = hasCommute
+        ? `<span class="commute-badge on">🚃 通勤あり：消耗を自動加算中</span>`
+        : `<span class="commute-badge">🏠 在宅：通勤コストなし</span>`;
+      ctx = q.contextBase + badge + (hasCommute ? `<br><small style="color:var(--text3);font-size:11px">思考+${COMMUTE_BONUS.think} 感情+${COMMUTE_BONUS.emo} 対人+${COMMUTE_BONUS.social} が自動で加算されます</small>` : '');
+    }
+    document.getElementById('q-context').innerHTML = ctx;
+    document.getElementById('q-step').textContent = q.step;
+    document.getElementById('q-text').textContent = q.text;
+    document.getElementById('q-hint').textContent = q.hint;
+    document.getElementById('next-btn').textContent = currentQ === 3 ? '結果を見る' : '次へ';
+    document.getElementById('next-btn').disabled = answers[currentQ] === null;
 
     const wrap = document.getElementById('options');
-    wrap.innerHTML='';
-    q.choices.forEach((c,i)=>{
+    wrap.innerHTML = '';
+    q.choices.forEach((c, i) => {
       const div = document.createElement('div');
-      div.className = 'opt'+(answers[currentQ]===i?' selected':'');
-      div.innerHTML = `
-        <div class="opt-left">
-          <div class="opt-text">${c.text}</div>
-          ${c.sub?`<div class="opt-sub">${c.sub}</div>`:''}
-        </div>
-        <div class="opt-radio"><div class="opt-dot"></div></div>`;
-      div.addEventListener('click',()=>{
-        answers[currentQ]=i;
-        wrap.querySelectorAll('.opt').forEach(e=>e.classList.remove('selected'));
+      div.className = 'opt' + (answers[currentQ] === i ? ' selected' : '');
+      div.innerHTML = `<div class="opt-left"><div class="opt-text">${c.text}</div>${c.sub ? `<div class="opt-sub">${c.sub}</div>` : ''}</div><div class="opt-radio"><div class="opt-dot"></div></div>`;
+      div.addEventListener('click', () => {
+        answers[currentQ] = i;
+        wrap.querySelectorAll('.opt').forEach(e => e.classList.remove('selected'));
         div.classList.add('selected');
-        document.getElementById('next-btn').disabled=false;
+        document.getElementById('next-btn').disabled = false;
       });
       wrap.appendChild(div);
     });
 
-    body.style.transition='opacity .2s ease, transform .2s ease';
-    requestAnimationFrame(()=>{ body.style.opacity='1'; body.style.transform='none'; });
-  },90);
+    body.style.transition = 'opacity .2s ease, transform .2s ease';
+    requestAnimationFrame(() => { body.style.opacity = '1'; body.style.transform = 'none'; });
+  }, 90);
 }
 
-/* ══════════════════════════════════
-   CALC
-══════════════════════════════════ */
-function calcLoad(){
-  let t=0,e=0,s=0;
-  QS.forEach((q,i)=>{
-    if(answers[i]!==null){ t+=q.choices[answers[i]].think; e+=q.choices[answers[i]].emo; s+=q.choices[answers[i]].social; }
-  });
-  return { think:Math.min(100,t), emo:Math.min(100,e), social:Math.min(100,s) };
-}
-function mFill(v){ return v<60?'#1a7a4a':v<82?'#f5a623':'#e03535'; }
-function mText(v){ return v<60?'var(--green)':v<82?'var(--amber)':'var(--red)'; }
-function mComment(v, label){
-  if(v<40) return label+'は余裕があります。';
-  if(v<60) return label+'の消費が出てきています。';
-  if(v<82) return label+'がかなり消耗しています。意識的に休憩を。';
-  return label+'がほぼ限界です。優先して休んでください。';
-}
-function siIdx(t,e,s){ const m=Math.max(t,e,s); return m<60?0:m<82?1:2; }
-
-/* ══════════════════════════════════
+/* ════════════════════════════════════════
    RENDER RESULT
-══════════════════════════════════ */
-function renderResult(){
-  const {think,emo,social}=calcLoad();
-  const si=siIdx(think,emo,social);
-  const st=STATUS[si];
+════════════════════════════════════════ */
+function renderResult() {
+  const { think, emo, social } = calcLoad();
+  const si = siIdx(think, emo, social);
+  const st = STATUS[si];
+  document.getElementById('status-hero').className = 'status-hero ' + st.cls;
+  document.getElementById('r-badge').textContent = st.key;
+  document.getElementById('r-title').textContent = st.title;
+  document.getElementById('r-body').innerHTML = st.body(think, emo, social);
+  document.getElementById('note-title').textContent = st.noteTitle;
+  document.getElementById('note-sub').textContent = st.noteSub;
+  document.getElementById('note-cta').classList.add('visible');
 
-  document.getElementById('status-hero').className='status-hero '+st.cls;
-  document.getElementById('r-badge').textContent  = st.key;
-  document.getElementById('r-title').textContent  = st.title;
-  document.getElementById('r-body').innerHTML     = st.body(think,emo,social);
-
-  // meters animate
-  requestAnimationFrame(()=>{
-    [['think',think,'思考エネルギー'],['emo',emo,'感情バッファ'],['sio',social,'対人負荷']].forEach(([k,v,label],idx)=>{
-      setTimeout(()=>{
-        document.getElementById(k+'-fill').style.cssText=`width:${v}%;background:${mFill(v)}`;
-        const val=document.getElementById(k+'-val');
-        val.textContent=v+'%'; val.style.color=mText(v);
-        document.getElementById(k+'-comment').textContent=mComment(v,label);
-      },idx*80);
+  requestAnimationFrame(() => {
+    [['think', think, '意思決定リソース'], ['emo', emo, '愛想笑いキャパ'], ['sio', social, '人と話すコスト']].forEach(([k, v, l], i) => {
+      setTimeout(() => {
+        document.getElementById(k + '-fill').style.cssText = `width:${v}%;background:${mFill(v)}`;
+        const val = document.getElementById(k + '-val');
+        val.textContent = v + '%'; val.style.color = mText(v);
+        document.getElementById(k + '-comment').textContent = mComment(v, l);
+        if (v >= 75) document.getElementById(k + '-sub').classList.add('visible');
+      }, i * 80);
     });
   });
-
-  // note CTA — 全ステータスで表示
-  const cta=document.getElementById('note-cta');
-  document.getElementById('note-title').textContent=st.noteTitle;
-  document.getElementById('note-sub').textContent  =st.noteSub;
-  cta.classList.add('visible');
 }
 
-/* ══════════════════════════════════
-   CANVAS
-══════════════════════════════════ */
-function rr(ctx,x,y,w,h,r,fill){
+/* ════════════════════════════════════════
+   CANVAS — 固定座標レイアウト
+   LEFT  x:48〜 (LW=570+50)
+   RIGHT x:688〜 (RW=484)
+   CARD_H=120, CARD_GAP=10
+   4枚 × 120 + 3 × 10 = 510px → y:42+510=552 < 630 OK
+════════════════════════════════════════ */
+function cvRR(ctx, x, y, w, h, r, fill, stroke, lw) {
   ctx.beginPath();
   ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
   ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
   ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
   ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
-  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if (fill)   { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = lw || 1; ctx.stroke(); }
 }
-function wrapText(ctx,text,x,y,maxW,lh){
-  let line='',cy=y;
-  for(const ch of text){
-    const t=line+ch;
-    if(ctx.measureText(t).width>maxW&&line){ctx.fillText(line,x,cy);line=ch;cy+=lh;}else line=t;
-  }
-  if(line)ctx.fillText(line,x,cy);
+
+function drawMeter(ctx, x, y, barW, label, val, color) {
+  ctx.font = '400 11px "JetBrains Mono",monospace';
+  ctx.fillStyle = '#9b9b94'; ctx.textAlign = 'left';
+  ctx.fillText(label, x, y);
+  cvRR(ctx, x, y + 9, barW, 5, 100, '#e0e0da');
+  cvRR(ctx, x, y + 9, Math.max(5, barW * val / 100), 5, 100, color);
+  ctx.font = '600 13px "JetBrains Mono",monospace';
+  ctx.fillStyle = color; ctx.textAlign = 'right';
+  ctx.fillText(val + '%', x + barW + 44, y + 18);
+  ctx.textAlign = 'left';
 }
-function buildCanvas(){
-  const cv=document.getElementById('share-canvas');
-  const ctx=cv.getContext('2d');
-  const W=1200,H=630;
-  const {think,emo,social}=calcLoad();
-  const si=siIdx(think,emo,social);
-  const st=STATUS[si];
-  const cols=['#1a7a4a','#8a5200','#a82828'];
-  const bgs =['#edf7f2','#fff4e0','#fdf0f0'];
-  const mcs =['#1a7a4a','#f5a623','#e03535'];
-  const col=cols[si],bg=bgs[si];
 
-  ctx.fillStyle='#f7f7f5';ctx.fillRect(0,0,W,H);
-  ctx.fillStyle=col;ctx.fillRect(0,0,W,4);
+function buildCanvas() {
+  const cv = document.getElementById('share-canvas');
+  const ctx = cv.getContext('2d');
+  const W = 1200, H = 630;
+  const { think, emo, social } = calcLoad();
+  const si = siIdx(think, emo, social);
+  const st = STATUS[si];
+  const sCols = ['#1a7a4a','#8a5200','#a82828'];
+  const sBgs  = ['#edf7f2','#fff4e0','#fdf0f0'];
+  const mColors = [think, emo, social].map(v => v < 60 ? '#1a7a4a' : v < 82 ? '#f5a623' : '#e03535');
+  const culprit = (document.getElementById('culprit-input').value || '').trim();
+  const hasCulpritText = culprit.length > 0;
 
-  const lx=80;
-  ctx.font='600 11px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
-  ctx.fillText('INTROVERT RESOURCE CHECKER · α',lx,64);
-  ctx.font='700 50px "Noto Sans JP",sans-serif';ctx.fillStyle='#1a1a18';
-  ctx.fillText('内向型リソース',lx,138);ctx.fillText('チェッカー',lx,198);
+  /* BG */
+  ctx.fillStyle = '#f7f7f5'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = sCols[si]; ctx.fillRect(0, 0, W, 4);
 
-  ctx.font='600 12px "JetBrains Mono",monospace';
-  const bw=ctx.measureText(st.key).width+28;
-  rr(ctx,lx,218,bw,30,100,bg);
-  ctx.fillStyle=col;ctx.fillText(st.key,lx+14,237);
+  /* ═══ LEFT COLUMN ═══ */
+  const LX = 48, LW = 560;
 
-  ctx.font='700 20px "Noto Sans JP",sans-serif';ctx.fillStyle='#1a1a18';
-  ctx.fillText(st.title,lx,280);
+  // eyebrow
+  ctx.font = '500 10px "JetBrains Mono",monospace';
+  ctx.fillStyle = '#b0b0a8'; ctx.textAlign = 'left';
+  ctx.fillText('INTROVERT RESOURCE CHECKER', LX, 28);
 
-  const subText=si===0?'思考・感情・対人、すべての指標が正常範囲内です。':
-                si===1?'エネルギー消費が多い状態です。意識的に休憩を。':
-                       'エネルギーがほぼ底をついています。今日は休んでください。';
-  ctx.font='400 13px "Noto Sans JP",sans-serif';ctx.fillStyle='#6b6b66';
-  wrapText(ctx,subText,lx,308,500,22);
-
-  const mLabels=['思考エネルギー消費','感情バッファ消費','対人負荷'];
-  const mVals=[think,emo,social];
-  mVals.forEach((v,i)=>{
-    const y=370+i*58;
-    ctx.font='400 12px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
-    ctx.fillText(mLabels[i],lx,y);
-    rr(ctx,lx,y+10,520,6,100,'#e8e8e4');
-    const fc=v<60?'#1a7a4a':v<82?'#f5a623':'#e03535';
-    rr(ctx,lx,y+10,Math.max(6,520*v/100),6,100,fc);
-    ctx.font='600 14px "JetBrains Mono",monospace';ctx.fillStyle=fc;
-    ctx.fillText(v+'%',lx+520+14,y+19);
-  });
-
-  // note footer strip
-  if(si>=1){
-    rr(ctx,lx,544,600,46,10,'rgba(65,201,180,.08)');
-    ctx.strokeStyle='rgba(65,201,180,.4)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.roundRect(lx,544,600,46,10);ctx.stroke();
-    rr(ctx,lx+12,555,44,24,6,'#41c9b4');
-    ctx.font='700 10px "JetBrains Mono",monospace';ctx.fillStyle='#fff';
-    ctx.fillText('note',lx+20,571);
-    ctx.font='500 13px "Noto Sans JP",sans-serif';ctx.fillStyle='#1a1a18';
-    ctx.fillText(st.noteTitle||'',lx+66,567);
-    ctx.font='400 11px "Noto Sans JP",sans-serif';ctx.fillStyle='#6b6b66';
-    ctx.fillText('note.com/osakanasansan',lx+66,582);
+  // ─ 主犯カード（あれば） ─
+  if (hasCulpritText) {
+    cvRR(ctx, LX, 36, LW + 48, 86, 10, '#ffffff', sCols[si] + '44', 1);
+    ctx.font = '600 10px "JetBrains Mono",monospace';
+    ctx.fillStyle = sCols[si]; ctx.textAlign = 'left';
+    ctx.fillText("TODAY'S CULPRIT — 今日の主犯", LX + 14, 54);
+    let fs = 36;
+    ctx.font = `900 ${fs}px "Noto Sans JP",sans-serif`;
+    const maxCW = LW + 48 - 28;
+    while (ctx.measureText(culprit).width > maxCW && fs > 16) { fs--; ctx.font = `900 ${fs}px "Noto Sans JP",sans-serif`; }
+    ctx.fillStyle = '#1a1a18';
+    ctx.fillText(culprit, LX + 14, 36 + 62);
   }
 
-  ctx.strokeStyle='#e8e8e4';ctx.lineWidth=1;
-  ctx.beginPath();ctx.moveTo(700,40);ctx.lineTo(700,H-40);ctx.stroke();
+  // ─ 固定座標（主犯あり/なしで切り替え） ─
+  const HAS = hasCulpritText;
+  const badgeY  = HAS ? 132 : 42;
+  const titleY  = HAS ? 158 : 68;
+  const subY    = HAS ? 182 : 92;
+  const meter1Y = HAS ? 216 : 128;
+  const meter2Y = HAS ? 260 : 172;
+  const meter3Y = HAS ? 304 : 216;
+  const noteY   = HAS ? 352 : 266;
 
-  const rx=740;
-  ctx.font='600 11px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
-  ctx.fillText("TODAY'S ANSWERS",rx,64);
+  // ステータスバッジ
+  ctx.font = '700 11px "JetBrains Mono",monospace';
+  const bw = ctx.measureText(st.key).width + 20;
+  cvRR(ctx, LX, badgeY, bw, 24, 100, sBgs[si]);
+  ctx.fillStyle = sCols[si]; ctx.textAlign = 'left';
+  ctx.fillText(st.key, LX + 10, badgeY + 16);
 
-  const qLabels=['起床時','午前中','午後','いちばんしんどかった場面'];
-  QS.forEach((q,qi)=>{
-    const sel=answers[qi];if(sel===null)return;
-    const c=q.choices[sel],ty=88+qi*128;
-    rr(ctx,rx,ty,415,112,12,'#ffffff');
-    ctx.strokeStyle='#e8e8e4';ctx.lineWidth=1;
-    ctx.beginPath();ctx.roundRect(rx,ty,415,112,12);ctx.stroke();
-    ctx.font='600 10px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
-    ctx.fillText(qLabels[qi].toUpperCase(),rx+16,ty+22);
-    ctx.font='700 16px "Noto Sans JP",sans-serif';ctx.fillStyle='#1a1a18';
-    ctx.fillText(c.text,rx+16,ty+50);
-    if(c.sub){ctx.font='400 12px "Noto Sans JP",sans-serif';ctx.fillStyle='#ababA4';ctx.fillText(c.sub,rx+16,ty+70);}
-    const pills=[{l:'思考+'+c.think,c:'#378add'},{l:'感情+'+c.emo,c:'#9b59b6'},{l:'対人+'+c.social,c:'#1a7a4a'}];
-    let px=rx+16;
-    ctx.font='600 10px "JetBrains Mono",monospace';
-    pills.forEach(p=>{
-      const pw=ctx.measureText(p.l).width+14;
-      rr(ctx,px,ty+82,pw,20,100,p.c+'18');
-      ctx.fillStyle=p.c;ctx.fillText(p.l,px+7,ty+96);
-      px+=pw+6;
+  // ステータスタイトル
+  ctx.font = `700 ${HAS ? 17 : 20}px "Noto Sans JP",sans-serif`;
+  ctx.fillStyle = '#1a1a18';
+  ctx.fillText(st.title, LX, titleY);
+
+  // サブテキスト
+  const subs = [
+    'すべての指標が正常範囲内。このまま無理せず。',
+    'エネルギー消費が多い状態。意識的に休憩を。',
+    'エネルギーがほぼ底をついています。休んでください。',
+  ];
+  ctx.font = '400 12px "Noto Sans JP",sans-serif';
+  ctx.fillStyle = '#6b6b66';
+  ctx.fillText(subs[si], LX, subY);
+
+  // 通勤バッジ（通勤ありの場合）
+  if (hasCommute) {
+    const tag = '🚃 通勤あり';
+    ctx.font = '500 11px "Noto Sans JP",sans-serif';
+    const tw = ctx.measureText(tag).width + 16;
+    cvRR(ctx, LX, subY + 12, tw, 20, 100, '#fff4e0');
+    ctx.fillStyle = '#8a5200';
+    ctx.fillText(tag, LX + 8, subY + 26);
+  }
+
+  // メーター3本（固定座標）
+  const mLabels = ['意思決定リソース', '愛想笑いキャパ', '人と話すコスト'];
+  drawMeter(ctx, LX, meter1Y, LW, mLabels[0], think,  mColors[0]);
+  drawMeter(ctx, LX, meter2Y, LW, mLabels[1], emo,    mColors[1]);
+  drawMeter(ctx, LX, meter3Y, LW, mLabels[2], social, mColors[2]);
+
+  // note strip（省エネ以上）
+  if (si >= 1 && noteY + 44 <= H - 20) {
+    cvRR(ctx, LX, noteY, LW + 48, 44, 8, 'rgba(65,201,180,.09)', 'rgba(65,201,180,.4)', 1);
+    cvRR(ctx, LX + 12, noteY + 12, 40, 20, 5, '#41c9b4');
+    ctx.font = '700 10px "JetBrains Mono",monospace'; ctx.fillStyle = '#fff';
+    ctx.fillText('note', LX + 18, noteY + 25);
+    ctx.font = '500 12px "Noto Sans JP",sans-serif'; ctx.fillStyle = '#1a1a18';
+    ctx.fillText(st.noteTitle, LX + 62, noteY + 21);
+    ctx.font = '400 10px "JetBrains Mono",monospace'; ctx.fillStyle = '#6b6b66';
+    ctx.fillText('note.com/osakanasansan →', LX + 62, noteY + 35);
+  }
+
+  /* ═══ 縦区切り ═══ */
+  ctx.strokeStyle = '#e0e0da'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(672, 20); ctx.lineTo(672, H - 20); ctx.stroke();
+
+  /* ═══ RIGHT COLUMN ═══ */
+  const RX = 692, RW = W - RX - 24;
+  const CARD_H = 120, CARD_GAP = 10;
+
+  ctx.font = '600 10px "JetBrains Mono",monospace';
+  ctx.fillStyle = '#b0b0a8'; ctx.textAlign = 'left';
+  ctx.fillText("TODAY'S ANSWERS", RX, 28);
+
+  // 通勤ラベル
+  if (hasCommute !== null) {
+    const tag2 = hasCommute ? '🚃 通勤あり' : '🏠 在宅';
+    ctx.font = '500 11px "Noto Sans JP",sans-serif';
+    const tw2 = ctx.measureText(tag2).width + 14;
+    cvRR(ctx, RX, 34, tw2, 18, 100, hasCommute ? '#fff4e0' : '#f0f0ee');
+    ctx.fillStyle = hasCommute ? '#8a5200' : '#6b6b66';
+    ctx.fillText(tag2, RX + 7, 47);
+  }
+
+  const qLabels = ['起床時', '午前中', '午後', 'ピーク'];
+  QS.forEach((q, qi) => {
+    const sel = answers[qi]; if (sel === null) return;
+    const c = q.choices[sel];
+    const ty = 58 + qi * (CARD_H + CARD_GAP);
+
+    cvRR(ctx, RX, ty, RW, CARD_H, 10, '#ffffff', '#e8e8e4', 1);
+
+    ctx.font = '600 10px "JetBrains Mono",monospace'; ctx.fillStyle = '#b0b0a8'; ctx.textAlign = 'left';
+    ctx.fillText(qLabels[qi].toUpperCase(), RX + 14, ty + 20);
+
+    let fs2 = 15;
+    ctx.font = `700 ${fs2}px "Noto Sans JP",sans-serif`;
+    while (ctx.measureText(c.text).width > RW - 24 && fs2 > 10) { fs2--; ctx.font = `700 ${fs2}px "Noto Sans JP",sans-serif`; }
+    ctx.fillStyle = '#1a1a18';
+    ctx.fillText(c.text, RX + 14, ty + 44);
+
+    if (c.sub) {
+      ctx.font = '400 11px "Noto Sans JP",sans-serif'; ctx.fillStyle = '#b0b0a8';
+      ctx.fillText(c.sub, RX + 14, ty + 62);
+    }
+
+    const pills = [
+      { l: '思考+' + c.think, col: '#3b82c4' },
+      { l: '感情+' + c.emo,   col: '#9b59b6' },
+      { l: '対人+' + c.social,col: '#1a7a4a' },
+    ];
+    // Q2/Q3 通勤ありの場合は通勤ボーナスも表示
+    if (hasCommute && (qi === 1 || qi === 2) && !c.isRest) {
+      pills.push({ l: '通勤+', col: '#8a5200' });
+    }
+    let px = RX + 14;
+    ctx.font = '600 10px "JetBrains Mono",monospace';
+    pills.forEach(p => {
+      const pw = ctx.measureText(p.l).width + 12;
+      cvRR(ctx, px, ty + 76, pw, 18, 100, p.col + '1a');
+      ctx.fillStyle = p.col; ctx.textAlign = 'left';
+      ctx.fillText(p.l, px + 6, ty + 89);
+      px += pw + 5;
     });
   });
 
-  ctx.font='400 11px "JetBrains Mono",monospace';ctx.fillStyle='#ababA4';
-  ctx.fillText('#内向型 #introvert',lx,H-36);
-  const fn='shex1009-byte.github.io/introvert-checker';
-  ctx.fillText(fn,W-lx-ctx.measureText(fn).width,H-36);
+  /* フッター */
+  ctx.font = '400 10px "JetBrains Mono",monospace'; ctx.fillStyle = '#c0c0b8'; ctx.textAlign = 'left';
+  ctx.fillText('#内向型 #introvert', LX, H - 12);
+  ctx.textAlign = 'right';
+  ctx.fillText('shex1009-byte.github.io/introvert-checker', W - 24, H - 12);
+  ctx.textAlign = 'left';
   return cv;
 }
 
-function saveImage(){
-  const a=document.createElement('a');
-  a.download='introvert-status.png';
-  a.href=buildCanvas().toDataURL('image/png');a.click();
+function saveImage() {
+  const a = document.createElement('a');
+  a.download = 'introvert-status.png';
+  a.href = buildCanvas().toDataURL('image/png'); a.click();
 }
-function generateAndShare(){
+function generateAndShare() {
   saveImage();
-  const {think,emo,social}=calcLoad();
-  const si=siIdx(think,emo,social);
-  const st=STATUS[si];
-  const noteLine=si>=1?'\n\nhttps://note.com/osakanasansan':'';
-  const txt='【内向型リソース・チェッカー】\n\n判定：'+st.title+'\n思考消費 '+think+'% / 感情消費 '+emo+'% / 対人負荷 '+social+'%'+noteLine+'\n\n#内向型 #introvert\nhttps://shex1009-byte.github.io/introvert-checker/';
-  setTimeout(()=>window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(txt),'_blank'),400);
+  const { think, emo, social } = calcLoad();
+  const si = siIdx(think, emo, social);
+  const st = STATUS[si];
+  const culprit = (document.getElementById('culprit-input').value || '').trim();
+  const cLine = culprit ? '\n今日の主犯：' + culprit : '';
+  const comLine = hasCommute ? '（通勤あり）' : '';
+  const nLine = si >= 1 ? '\n\nhttps://note.com/osakanasansan' : '';
+  const txt = '【内向型リソース・チェッカー】\n\n判定：' + st.title + comLine + cLine +
+    '\n意思決定リソース ' + think + '% / 愛想笑いキャパ ' + emo + '% / 人と話すコスト ' + social + '%' +
+    nLine + '\n\n#内向型 #introvert\nhttps://shex1009-byte.github.io/introvert-checker/';
+  setTimeout(() => window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(txt), '_blank'), 400);
 }
 </script>
 </body>
